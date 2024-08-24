@@ -1,0 +1,16 @@
+{
+    "header": {
+      "home": "Home",
+      "about": "About",
+      "portfolio": "Portfolio",
+      "contact": "Contact"
+    },
+
+    "home": {
+      "text": "Currently in DWWM (Développeur Web et Web Mobile - Web and Mobile Web Developer) training until October 4th, 2024. The learning and practice in the enterprise through an internship is finished; only the preparation and the final exam remain.",
+      "poo": "Object-oriented programming",
+      "mvc": "Model-view-controller",
+      "skills": "Skills"
+    }
+  }
+  

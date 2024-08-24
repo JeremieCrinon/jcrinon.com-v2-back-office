@@ -1,0 +1,5 @@
+.bg-login-image{
+    background-image: url('./img/logo_sans_text.png')!important;
+    background-size: 50%;
+    background-repeat: no-repeat;
+}

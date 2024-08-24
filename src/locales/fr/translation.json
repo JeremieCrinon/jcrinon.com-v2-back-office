@@ -1,0 +1,16 @@
+{
+    "header": {
+      "home": "Accueil",
+      "about": "À propos",
+      "portfolio": "Portfolio",
+      "contact": "Contact"
+    },
+
+    "home": {
+      "text": "Actuellement en formation professionnelle DWWM (Développeur Web et Web Mobile) jusqu'au 4 octobre 2024, l'apprentissage et la mise en pratique en entreprise sont terminés, il reste la préparation et le passage du titre.",
+      "poo": "Programmation orienté objet",
+      "mvc": "Modèle vue contrôleur",
+      "skills": "Compétences"
+    }
+  }
+  
