@@ -58,6 +58,18 @@ function Header({ routes }){
                     </Link>
                 </li>
             ))}
+            <li className={location.pathname === '/projects' || location.pathname === '/projects/create' ? 'active nav-item' : 'nav-item'}>
+                <Link
+                to={"/projects"}
+                className="nav-link"
+                >
+                    <>
+                      <i className="fas fa-fw fa-tachometer-alt"></i>
+                      <span>{"Projects"}</span>
+                    </>
+                    
+                </Link>
+            </li>
 
         </ul>
         {/* End of Sidebar */}

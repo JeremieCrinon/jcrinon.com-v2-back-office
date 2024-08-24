@@ -25,7 +25,7 @@ function Login({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail, set
 
         const data = await response.json();
 
-        const response2 = await requestWithoutBodyWithJWT(config.apiUrl + '/api/isuser', data.token)
+        const response2 = await requestWithoutBodyWithJWT(config.apiUrl + '/api/isuser', data.token);
 
         if(response2 == 401 || response2 == 403){
           throw new Error;

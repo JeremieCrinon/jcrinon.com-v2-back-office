@@ -15,14 +15,13 @@ import NewAccount from './pages/Login/NewAccount';
 import VerifyEmail from './pages/Login/VerifyEmail';
 import NotFound from './pages/Errors/404';
 import InternalServerError from './pages/Errors/500';
+import ReadDeleteProject from './pages/Projects/ReadDelete';
+
+import { requestWithoutBodyWithJWT } from './utils';
+
+import config from './config.json';
 
 function App() {
-
-  // const [token, setToken] = useState(Cookies.get('token') !== "null" && Cookies.get('token') ? Cookies.get('token') : null);
-  // const [isAdmin, setIsAdmin] = useState(Cookies.get('isAdmin') === 'true' || null);
-  // const [isNewAccount, setIsNewAccount] = useState(Cookies.get('isNewAccount') === 'true' || null);
-  // const [isUnverifiedEmail, setIsUnverifiedEmail] = useState(Cookies.get('isUnverifiedEmail') === 'true' || null);
-  // const [userEmail, setUserEmail] = useState(Cookies.get('userEmail') || null);
 
   const [token, setToken] = useState(Cookies.get('token') !== "null" && Cookies.get('token') ? Cookies.get('token') : null);
   const [isAdmin, setIsAdmin] = useState(Cookies.get('isAdmin') !== "null" && Cookies.get('isAdmin') ? Cookies.get('isAdmin') === 'true' : null);
@@ -44,6 +43,54 @@ function App() {
       document.body.classList.remove('bg-gradient-primary');
     }
   }, [token]);
+
+
+  //Verifying that the token is still correct on starting
+  useEffect(() => {
+    console.log("Testing connexion");
+    if(token === null || token === 'null'){
+      setIsAdmin(null);
+      setToken(null);
+      Cookies.remove('token');
+      Cookies.remove('isAdmin');
+      Cookies.remove('isNewAccount');
+      Cookies.remove('isUnverifiedEmail');
+      Cookies.remove('userEmail');
+    } else {
+      async function fetchData(){
+        console.log("Making a request");
+        const response = await requestWithoutBodyWithJWT(config.apiUrl + '/api/isuser', token);
+        // console.log(await response.json());
+        if(response == 401 || response == 403){
+          setIsAdmin(null);
+          setToken(null);
+          Cookies.remove('token');
+          Cookies.remove('isAdmin');
+          Cookies.remove('isNewAccount');
+          Cookies.remove('isUnverifiedEmail');
+          Cookies.remove('userEmail');
+        } else if(response == 500){
+          setError500(true);
+        } else {
+          const data = await response.json();
+          if(await data.result == null){
+            console.log(response.json().result);
+            setIsAdmin(null);
+            setToken(null);
+            Cookies.remove('token');
+            Cookies.remove('isAdmin');
+            Cookies.remove('isNewAccount');
+            Cookies.remove('isUnverifiedEmail');
+            Cookies.remove('userEmail');
+          }
+        }
+        
+      }
+      
+      fetchData();
+    }
+    
+  }, [])
 
   useEffect(() => {
     Cookies.set('token', token, { expires: 7 });
@@ -97,6 +144,7 @@ function App() {
                     {routes.map((route, index) => (
                       <Route key={index} path={route.path} element={route.element} />
                     ))}
+                    <Route path="/projects" element={<ReadDeleteProject token={token} setError500={setError500} />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </div>
