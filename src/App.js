@@ -16,8 +16,15 @@ import VerifyEmail from './pages/Login/VerifyEmail';
 import NotFound from './pages/Errors/404';
 import InternalServerError from './pages/Errors/500';
 import ReadDeleteProject from './pages/Projects/ReadDelete';
+import CreateProject from './pages/Projects/Create';
+import EditProject from './pages/Projects/Edit';
 
 import { requestWithoutBodyWithJWT } from './utils';
+
+// SB-admin
+import "./sb-admin/sb-admin-2.min.css";
+import "./vendor/fontawesome-free/css/all.min.css";
+
 
 import config from './config.json';
 
@@ -61,7 +68,7 @@ function App() {
         console.log("Making a request");
         const response = await requestWithoutBodyWithJWT(config.apiUrl + '/api/isuser', token);
         // console.log(await response.json());
-        if(response == 401 || response == 403){
+        if(response === 401 || response === 403){
           setIsAdmin(null);
           setToken(null);
           Cookies.remove('token');
@@ -69,11 +76,11 @@ function App() {
           Cookies.remove('isNewAccount');
           Cookies.remove('isUnverifiedEmail');
           Cookies.remove('userEmail');
-        } else if(response == 500){
+        } else if(response === 500){
           setError500(true);
         } else {
           const data = await response.json();
-          if(await data.result == null){
+          if(await data.result === null){
             console.log(response.json().result);
             setIsAdmin(null);
             setToken(null);
@@ -144,8 +151,10 @@ function App() {
                     {routes.map((route, index) => (
                       <Route key={index} path={route.path} element={route.element} />
                     ))}
-                    <Route path="/projects" element={<ReadDeleteProject token={token} setError500={setError500} />} />
-                    <Route path="*" element={<NotFound />} />
+                    <Route path="/projects" element={<ReadDeleteProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} />} />
+                    <Route path="/projects/create" element={<CreateProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} />} />
+                    <Route path="/projects/:id/edit" element={<EditProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} />} />
+                    <Route path="*" element={<NotFound token={token} />} />
                   </Routes>
                 </div>
               </div>

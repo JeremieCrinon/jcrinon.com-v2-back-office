@@ -7,7 +7,7 @@ export async function requestWithoutBodyWithoutJWT(url){
             }
           });
     
-        if(response.status == 401 || response.status == 403){ // That's an error comming from the user
+        if(response.status == 401 || response.status == 403 || response.status == 404){ // That's an error comming from the user
             return response.status;
         } else if (!response.ok){ // That's an error from either the back-end or front-end, but it ain't comming from the user
             console.error("The server returned an error " + response.status + ".")
