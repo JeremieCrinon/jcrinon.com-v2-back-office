@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { requestWithBodyWithJWT } from '../../utils';
+import { useNavigate } from 'react-router-dom';
 
 import config from '../../config.json';
 
 function VerifyEmail({setIsUnverifiedEmail, token, setFlashMessage, setError500}){
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -36,6 +39,7 @@ function VerifyEmail({setIsUnverifiedEmail, token, setFlashMessage, setError500}
 
       setFlashMessage("Email successfully verified !")
       setIsUnverifiedEmail(false);
+      navigate('/');
 
     } catch (error) {
       setError('Email verification failed, please verify the code and try again.');

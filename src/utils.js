@@ -1,3 +1,6 @@
+import Header from "./components/Header/Header";
+import Topbar from "./components/Topbar/Topbar";
+
 export async function requestWithoutBodyWithoutJWT(url){
     try{
         const response = await fetch(url, {
@@ -92,4 +95,20 @@ export async function requestWithBodyWithJWT(url, body, jwt){
         console.error("Error while making a request : " + error)
         return 500;
     }
+}
+
+export function baseAdmin(content, {setToken, setIsAdmin}){
+    return (
+        <div id="wrapper">
+            <Header />
+            <div id="content-wrapper" className="d-flex flex-column">
+                <div id="content">
+                    <Topbar setToken={setToken} setIsAdmin={setIsAdmin} />
+                    <div className="container-fluid">
+                        {content}
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
 }

@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { requestWithoutBodyWithoutJWT } from '../../utils';
+import { requestWithoutBodyWithoutJWT, baseAdmin } from '../../utils';
 
 import config from '../../config.json';
 
-function EditProject({token, setError500, setFlashMessage}){
+function EditProject({token, setError500, setFlashMessage, setToken, setIsAdmin}){
 
     const [name, setName] = useState('');
     const [french_name, setFrench_name] = useState('');
@@ -118,59 +118,69 @@ function EditProject({token, setError500, setFlashMessage}){
     
       };
 
-    return (
-        <div className='d-flex flex-column md-12'>
-            <form className="user col-lg-12">
-                {name && french_name && 
-                    <div className="form-group row">
-                        <div className="col-sm-3 mb-3 mb-sm-0">
-                            <input type="text" className="form-control"
-                                placeholder="Name" id="name" value={name} onChange={(e) => setName(e.target.value)} />
-                        </div>
-                        <div className="col-sm-3">
-                            <input type="text" className="form-control"
-                                placeholder="Name in french" id="french_name" value={french_name} onChange={(e) => setFrench_name(e.target.value)} />
+    const content = (
+        <div id="wrapper">
+            <div id="content-wrapper" className="d-flex flex-column">
+                <div id="content">
+                    <div className="container-fluid">
+                        <div className='d-flex flex-column md-12'>
+                            <form className="user col-lg-12">
+                                {name && french_name && 
+                                    <div className="form-group row">
+                                        <div className="col-sm-3 mb-3 mb-sm-0">
+                                            <input type="text" className="form-control"
+                                                placeholder="Name" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                                        </div>
+                                        <div className="col-sm-3">
+                                            <input type="text" className="form-control"
+                                                placeholder="Name in french" id="french_name" value={french_name} onChange={(e) => setFrench_name(e.target.value)} />
+                                        </div>
+                                    </div>
+                                }
+                                {description && french_description && 
+                                    <div className="form-group row">
+                                        <div className="col-sm-3 mb-3 mb-sm-0">
+                                            <input type="text" className="form-control"
+                                                placeholder="Description" id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
+                                        </div>
+                                        <div className="col-sm-3">
+                                            <input type="text" className="form-control"
+                                                placeholder="Description in french" id="french_description" value={french_description} onChange={(e) => setFrench_description(e.target.value)} />
+                                        </div>
+                                    </div>
+                                }
+                                <div className="form-group">
+                                    <input type="text" className="form-control col-lg-6"
+                                        placeholder="Link of the github repository (facultative)" id="github_link" value={github_link ? github_link : ''} onChange={(e) => setGithub_link(e.target.value)} />
+                                </div>
+                                
+                                
+                                <div className="form-group">
+                                    <input type="text" className="form-control col-lg-6"
+                                        placeholder="Link of the project (facultative)" id="project_link" value={project_link ? project_link : ''} onChange={(e) => setProject_link(e.target.value)} />
+                                </div>
+                                
+                                
+                                <div className="form-group">
+                                    <label htmlFor="image">
+                                        Enter a new image if you wanna change it.
+                                    </label>
+                                    <input type="file" className="form-control col-lg-6"
+                                        placeholder="Image" id="image" />
+                                </div>
+                                <a href='#' onClick={handleSubmit} className="btn btn-primary btn-user btn-block col-lg-6">
+                                    Edit Project
+                                </a>
+                            </form>
+                            {error && <div className="alert alert-danger mt-3">{error}</div>}
                         </div>
                     </div>
-                }
-                {description && french_description && 
-                    <div className="form-group row">
-                        <div className="col-sm-3 mb-3 mb-sm-0">
-                            <input type="text" className="form-control"
-                                placeholder="Description" id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
-                        </div>
-                        <div className="col-sm-3">
-                            <input type="text" className="form-control"
-                                placeholder="Description in french" id="french_description" value={french_description} onChange={(e) => setFrench_description(e.target.value)} />
-                        </div>
-                    </div>
-                }
-                <div className="form-group">
-                    <input type="text" className="form-control col-lg-6"
-                        placeholder="Link of the github repository (facultative)" id="github_link" value={github_link ? github_link : ''} onChange={(e) => setGithub_link(e.target.value)} />
                 </div>
-                
-                
-                <div className="form-group">
-                    <input type="text" className="form-control col-lg-6"
-                        placeholder="Link of the project (facultative)" id="project_link" value={project_link ? project_link : ''} onChange={(e) => setProject_link(e.target.value)} />
-                </div>
-                
-                
-                <div className="form-group">
-                    <label htmlFor="image">
-                        Enter a new image if you wanna change it.
-                    </label>
-                    <input type="file" className="form-control col-lg-6"
-                        placeholder="Image" id="image" />
-                </div>
-                <a href='#' onClick={handleSubmit} className="btn btn-primary btn-user btn-block col-lg-6">
-                    Edit Project
-                </a>
-            </form>
-            {error && <div className="alert alert-danger mt-3">{error}</div>}
+            </div>
         </div>
     )
+
+    return baseAdmin(content, {setToken, setIsAdmin})
 
 }
 

@@ -2,8 +2,6 @@ import React, { useRef, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
-import routes from './routes';
-
 import Header from './components/Header/Header';
 import Topbar from './components/Topbar/Topbar';
 import FlashMessage from './components/FlashMessage/FlashMessage';
@@ -18,8 +16,11 @@ import InternalServerError from './pages/Errors/500';
 import ReadDeleteProject from './pages/Projects/ReadDelete';
 import CreateProject from './pages/Projects/Create';
 import EditProject from './pages/Projects/Edit';
+import Dashboard from './pages/Dashboard/Dashboard';
 
 import { requestWithoutBodyWithJWT } from './utils';
+
+import AutomaticRedirects from './components/AutomaticRedirects/AutomaticRedirects';
 
 // SB-admin
 import "./sb-admin/sb-admin-2.min.css";
@@ -38,14 +39,6 @@ function App() {
 
   const [flashMessage, setFlashMessage] = useState(null);
   const [error500, setError500] = useState(false);
-
-  const [resetPasswordCode, setResetPasswordCode] = useState(null);
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const changePasswordCodeParam = urlParams.get('code_reset_password');
-    setResetPasswordCode(changePasswordCodeParam !== '' && changePasswordCodeParam ? changePasswordCodeParam : null);
-  }, []);
 
   const closeMessage = () => {
     setFlashMessage(null);
@@ -117,7 +110,7 @@ function App() {
 
   return (
     <>
-      {error500 ? (
+      {/* {error500 ? (
         <InternalServerError />
       ) :
       token === null ? (
@@ -143,33 +136,25 @@ function App() {
           )}
           <VerifyEmail setIsUnverifiedEmail={setIsUnverifiedEmail} token={token} setFlashMessage={setFlashMessage} setError500={setError500} />
         </>
-      ) :
-      (
+      ) : */}
+        {flashMessage && (
+            <FlashMessage message={flashMessage} onClose={closeMessage} />
+        )}
         <Router>
-          <div id="wrapper">
-            <Header routes={routes}/>
-            <div id="content-wrapper" className="d-flex flex-column">
-              <div id="content">
-                <Topbar setToken={setToken} setIsAdmin={setIsAdmin} />
-                {flashMessage && (
-                  <FlashMessage message={flashMessage} onClose={closeMessage} />
-                )}
-                <div className="container-fluid">
-                  <Routes>
-                    {routes.map((route, index) => (
-                      <Route key={index} path={route.path} element={route.element} />
-                    ))}
-                    <Route path="/projects" element={<ReadDeleteProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} />} />
-                    <Route path="/projects/create" element={<CreateProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} />} />
-                    <Route path="/projects/:id/edit" element={<EditProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} />} />
-                    <Route path="*" element={<NotFound token={token} />} />
-                  </Routes>
-                </div>
-              </div>
-            </div>
-          </div>
+            <AutomaticRedirects error500={error500} token={token} isNewAccount={isNewAccount} isUnverifiedEmail={isUnverifiedEmail} />
+            <Routes>
+                <Route path="/" element={<Dashboard setToken={setToken} setIsAdmin={setIsAdmin} />} />
+                <Route path="/login" element={<Login setToken={setToken} setIsAdmin={setIsAdmin} setIsNewAccount={setIsNewAccount} setIsUnverifiedEmail={setIsUnverifiedEmail} setUserEmail={setUserEmail} setError500={setError500} setFlashMessage={setFlashMessage} />} />
+                <Route path="/new-account" element={<NewAccount setToken={setToken} setIsAdmin={setIsAdmin} setIsNewAccount={setIsNewAccount} setIsUnverifiedEmail={setIsUnverifiedEmail} userEmail={userEmail} token={token} setFlashMessage={setFlashMessage} setError500={setError500} />} />
+                <Route path="/verify-email" element={<VerifyEmail setIsUnverifiedEmail={setIsUnverifiedEmail} token={token} setFlashMessage={setFlashMessage} setError500={setError500} />} />
+                <Route path="/projects" element={<ReadDeleteProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setIsAdmin={setIsAdmin} />} />
+                <Route path="/projects/create" element={<CreateProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setIsAdmin={setIsAdmin} />} />
+                <Route path="/projects/:id/edit" element={<EditProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setIsAdmin={setIsAdmin} />} />
+                <Route path="/500" element={<InternalServerError />} />
+                <Route path="*" element={<NotFound token={token} />} />
+            </Routes>
         </Router>
-      )}
+      
     </>
   );
 }

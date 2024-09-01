@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 
 import config from '../../config.json';
 
-function CreateProject({token, setError500, setFlashMessage}){
+import { baseAdmin } from '../../utils';
+
+function CreateProject({token, setError500, setFlashMessage, setToken, setIsAdmin}){
 
     const [name, setName] = useState('');
     const [french_name, setFrench_name] = useState('');
@@ -87,52 +89,62 @@ function CreateProject({token, setError500, setFlashMessage}){
     
       };
 
-    return (
-        <div className='d-flex flex-column md-12'>
-            <form className="user col-lg-12">
-                
-                <div className="form-group row">
-                    <div className="col-sm-3 mb-3 mb-sm-0">
-                        <input type="text" className="form-control"
-                            placeholder="Name" id="name" onChange={(e) => setName(e.target.value)} />
+    const content = (
+        <div id="wrapper">
+            <div id="content-wrapper" className="d-flex flex-column">
+                <div id="content">
+                    <div className="container-fluid">
+                        <div className='d-flex flex-column md-12'>
+                            <form className="user col-lg-12">
+                                
+                                <div className="form-group row">
+                                    <div className="col-sm-3 mb-3 mb-sm-0">
+                                        <input type="text" className="form-control"
+                                            placeholder="Name" id="name" onChange={(e) => setName(e.target.value)} />
+                                    </div>
+                                    <div className="col-sm-3">
+                                        <input type="text" className="form-control"
+                                            placeholder="Name in french" id="french_name" onChange={(e) => setFrench_name(e.target.value)} />
+                                    </div>
+                                </div>
+                                <div className="form-group row">
+                                    <div className="col-sm-3 mb-3 mb-sm-0">
+                                        <input type="text" className="form-control"
+                                            placeholder="Description" id="description" onChange={(e) => setDescription(e.target.value)} />
+                                    </div>
+                                    <div className="col-sm-3">
+                                        <input type="text" className="form-control"
+                                            placeholder="Description in french" id="french_description" onChange={(e) => setFrench_description(e.target.value)} />
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <input type="text" className="form-control col-lg-6"
+                                        placeholder="Link of the github repository (facultative)" id="github_link" onChange={(e) => setGithub_link(e.target.value)} />
+                                </div>
+                                <div className="form-group">
+                                    <input type="text" className="form-control col-lg-6"
+                                        placeholder="Link of the project (facultative)" id="project_link" onChange={(e) => setProject_link(e.target.value)} />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="image">
+                                        Image
+                                    </label>
+                                    <input type="file" className="form-control col-lg-6"
+                                        placeholder="Image" id="image" />
+                                </div>
+                                <a href='#' onClick={handleSubmit} className="btn btn-primary btn-user btn-block col-lg-6">
+                                    Create Project
+                                </a>
+                            </form>
+                            {error && <div className="alert alert-danger mt-3">{error}</div>}
+                        </div>
                     </div>
-                    <div className="col-sm-3">
-                        <input type="text" className="form-control"
-                            placeholder="Name in french" id="french_name" onChange={(e) => setFrench_name(e.target.value)} />
-                    </div>
                 </div>
-                <div className="form-group row">
-                    <div className="col-sm-3 mb-3 mb-sm-0">
-                        <input type="text" className="form-control"
-                            placeholder="Description" id="description" onChange={(e) => setDescription(e.target.value)} />
-                    </div>
-                    <div className="col-sm-3">
-                        <input type="text" className="form-control"
-                            placeholder="Description in french" id="french_description" onChange={(e) => setFrench_description(e.target.value)} />
-                    </div>
-                </div>
-                <div className="form-group">
-                    <input type="text" className="form-control col-lg-6"
-                        placeholder="Link of the github repository (facultative)" id="github_link" onChange={(e) => setGithub_link(e.target.value)} />
-                </div>
-                <div className="form-group">
-                    <input type="text" className="form-control col-lg-6"
-                        placeholder="Link of the project (facultative)" id="project_link" onChange={(e) => setProject_link(e.target.value)} />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="image">
-                        Image
-                    </label>
-                    <input type="file" className="form-control col-lg-6"
-                        placeholder="Image" id="image" />
-                </div>
-                <a href='#' onClick={handleSubmit} className="btn btn-primary btn-user btn-block col-lg-6">
-                    Create Project
-                </a>
-            </form>
-            {error && <div className="alert alert-danger mt-3">{error}</div>}
+            </div>
         </div>
-    )
+    );
+
+    return baseAdmin(content, setToken={setToken}, setIsAdmin={setIsAdmin})
 
 }
 
