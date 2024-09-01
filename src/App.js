@@ -17,6 +17,8 @@ import ReadDeleteProject from './pages/Projects/ReadDelete';
 import CreateProject from './pages/Projects/Create';
 import EditProject from './pages/Projects/Edit';
 import Dashboard from './pages/Dashboard/Dashboard';
+import ForgotPassword from './pages/Login/ForgotPassword';
+import ResetPassword from './pages/Login/ResetPassword';
 
 import { requestWithoutBodyWithJWT } from './utils';
 
@@ -143,13 +145,22 @@ function App() {
         <Router>
             <AutomaticRedirects error500={error500} token={token} isNewAccount={isNewAccount} isUnverifiedEmail={isUnverifiedEmail} />
             <Routes>
+                {/* Dashboard */}
                 <Route path="/" element={<Dashboard setToken={setToken} setIsAdmin={setIsAdmin} />} />
+
+                {/* Login system */}
                 <Route path="/login" element={<Login setToken={setToken} setIsAdmin={setIsAdmin} setIsNewAccount={setIsNewAccount} setIsUnverifiedEmail={setIsUnverifiedEmail} setUserEmail={setUserEmail} setError500={setError500} setFlashMessage={setFlashMessage} />} />
                 <Route path="/new-account" element={<NewAccount setToken={setToken} setIsAdmin={setIsAdmin} setIsNewAccount={setIsNewAccount} setIsUnverifiedEmail={setIsUnverifiedEmail} userEmail={userEmail} token={token} setFlashMessage={setFlashMessage} setError500={setError500} />} />
                 <Route path="/verify-email" element={<VerifyEmail setIsUnverifiedEmail={setIsUnverifiedEmail} token={token} setFlashMessage={setFlashMessage} setError500={setError500} />} />
+                <Route path="/forgot/password" element={<ForgotPassword setError500={setError500} setFlashMessage={setFlashMessage} />} />
+                <Route path="/forgot/password/:code" element={<ResetPassword setError500={setError500} setFlashMessage={setFlashMessage} />} />
+
+                {/* Projects CRUD */}
                 <Route path="/projects" element={<ReadDeleteProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setIsAdmin={setIsAdmin} />} />
                 <Route path="/projects/create" element={<CreateProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setIsAdmin={setIsAdmin} />} />
                 <Route path="/projects/:id/edit" element={<EditProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setIsAdmin={setIsAdmin} />} />
+
+                {/* Errors */}
                 <Route path="/500" element={<InternalServerError />} />
                 <Route path="*" element={<NotFound token={token} />} />
             </Routes>

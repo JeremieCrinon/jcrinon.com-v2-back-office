@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+
 import { requestWithBodyWithoutJWT, requestWithoutBodyWithJWT } from '../../utils';
 
 import config from '../../config.json';
+
 
 function Login({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail, setUserEmail, setError500, setFlashMessage}){
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -44,6 +49,8 @@ function Login({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail, set
         setIsAdmin(isAdmin);
         setToken(data.token);
         setUserEmail(email);
+
+        navigate('/');
 
       } catch {
         setError('Login failed. Please check your credentials and try again.');
@@ -95,7 +102,7 @@ function Login({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail, set
                       {error && <div className="alert alert-danger mt-3">{error}</div>}
                       <hr />
                       <div className="text-center">
-                        <a className="small" href="#">Forgot Password?</a>
+                        <Link to={"/forgot/password"} className="small">Forgot Password?</Link>
                       </div>
                   </div>
                 </div>
