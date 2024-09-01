@@ -3,10 +3,13 @@ import { requestWithBodyWithoutJWT, requestWithoutBodyWithJWT } from '../../util
 
 import config from '../../config.json';
 
-function Login({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail, setUserEmail, setError500}){
+function Login({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail, setUserEmail, setError500, setFlashMessage}){
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  const [forgotPassword, setForgotPassword] = useState(false);
+  const [recoverEmail, setRecoverEmail] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -51,6 +54,32 @@ function Login({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail, set
 
   };
 
+  const handleRecoverSubmit = async (event) => {
+    event.preventDefault();
+
+      try{
+
+        const response = await requestWithBodyWithoutJWT(config.apiUrl + '/api/forgot/password', { email: recoverEmail });
+      
+        if(response == 401 || response == 403){
+          throw new Error;
+        }
+
+        if(response == 500){
+          setError500(true);
+        }
+
+        const data = await response.json();
+
+        setFlashMessage('An email with a link to recover your password has been sent to the user\'s email is he exists.');
+        setForgotPassword(false);
+
+      } catch {
+        setError('Login failed. Please check your credentials and try again.');
+      }
+
+  };
+
   return (
     <div className="container">
       <div className="row justify-content-center">
@@ -64,39 +93,69 @@ function Login({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail, set
                     <div className="text-center">
                       <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
                     </div>
-                    <form className="user" onSubmit={handleSubmit}>
-                      <div className="form-group">
-                        <input
-                          type="email"
-                          className="form-control form-control-user"
-                          id="exampleInputEmail"
-                          aria-describedby="emailHelp"
-                          placeholder="Enter Email Address..."
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          required
-                        />
-                      </div>
-                      <div className="form-group">
-                        <input
-                          type="password"
-                          className="form-control form-control-user"
-                          id="exampleInputPassword"
-                          placeholder="Password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          required
-                        />
-                      </div>
-                      <button type="submit" className="btn btn-primary btn-user btn-block">
-                        Login
-                      </button>
-                    </form>
-                    {error && <div className="alert alert-danger mt-3">{error}</div>}
-                    <hr />
-                    <div className="text-center">
-                      <a className="small" href="#">Forgot Password?</a>
-                    </div>
+                    {forgotPassword ? (
+                      <>
+                        <form className="user" onSubmit={handleRecoverSubmit}>
+                          <div className="form-group">
+                            <input
+                              type="email"
+                              className="form-control form-control-user"
+                              id="exampleInputEmail"
+                              aria-describedby="emailHelp"
+                              placeholder="Enter Email Address..."
+                              onChange={(e) => setRecoverEmail(e.target.value)}
+                              value={recoverEmail}
+                              required
+                            />
+                          </div>
+                          <button type="submit" className="btn btn-primary btn-user btn-block">
+                            Send a reset password e-mail
+                          </button>
+                        </form>
+                        {error && <div className="alert alert-danger mt-3">{error}</div>}
+                        <hr />
+                        <div className="text-center">
+                          <a className="small" href="#" onClick={() => setForgotPassword(false)}>Login</a>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <form className="user" onSubmit={handleSubmit}>
+                          <div className="form-group">
+                            <input
+                              type="email"
+                              className="form-control form-control-user"
+                              id="exampleInputEmail"
+                              aria-describedby="emailHelp"
+                              placeholder="Enter Email Address..."
+                              value={email}
+                              onChange={(e) => setEmail(e.target.value)}
+                              required
+                            />
+                          </div>
+                          <div className="form-group">
+                            <input
+                              type="password"
+                              className="form-control form-control-user"
+                              id="exampleInputPassword"
+                              placeholder="Password"
+                              value={password}
+                              onChange={(e) => setPassword(e.target.value)}
+                              required
+                            />
+                          </div>
+                          <button type="submit" className="btn btn-primary btn-user btn-block">
+                            Login
+                          </button>
+                        </form>
+                        {error && <div className="alert alert-danger mt-3">{error}</div>}
+                        <hr />
+                        <div className="text-center">
+                          <a className="small" href="#" onClick={() => setForgotPassword(true)}>Forgot Password?</a>
+                        </div>
+                      </>
+                    )}
+                    
                   </div>
                 </div>
               </div>
