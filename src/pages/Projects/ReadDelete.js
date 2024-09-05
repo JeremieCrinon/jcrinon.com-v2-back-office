@@ -10,7 +10,7 @@ function ReadDeleteProject({token, setError500, setFlashMessage, setToken, setIs
     
     async function requestProjects() {
         try{
-            const response = await requestWithoutBodyWithoutJWT(config.apiUrl + '/api/projects');
+            const response = await requestWithoutBodyWithJWT(config.apiUrl + '/api/projects/get', token);
 
             if(response == 401 || response == 403 || response == 404){
                 setError500(true);
