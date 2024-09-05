@@ -12,23 +12,20 @@ function NewAccount({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if(password!==passwordConfirm){
-      setError('Please enter the same passwords.');
-    }
-
     try {
-      // const response = await fetch(config.apiUrl + '/api/modify/account/new', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': 'Bearer ' + token
-      //   },
-      //   body: JSON.stringify({ email, password })
-      // });
+      if(password!==passwordConfirm){
+        throw new Error("passwd not matching");
+      }
+      if(email === ''){
+        throw new Error("no email");
+      }
+      if(password === ''){
+        throw new Error("no passwd");
+      }
       const response = await requestWithBodyWithJWT(config.apiUrl + '/api/modify/account/new', { email, password }, token)
 
       if(response == 401 || response == 403){
-        throw new Error;
+        throw new Error("incorrect credentials");
       }
 
       if(response == 500){
@@ -45,8 +42,15 @@ function NewAccount({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail
       setToken(null);
 
     } catch (error) {
-      setError('Modifying account failed. Please check your infos and try again.');
-      console.error('Error:', error);
+      if(error.message === "passwd not matching"){
+        setError("Please enter the same password!")
+      } else if(error.message === "no email"){
+        setError("Please enter an email");
+      } else if (error.message === "no passwd"){
+        setError("Please enter a password");
+      } else {
+        setError('Modifying account failed. Please check your infos and try again.');
+      }
     }
   };
 
@@ -73,32 +77,20 @@ function NewAccount({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail
                           placeholder="Enter Email Address..."
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          required
                         />
                       </div>
-                      {/* <div className="form-group">
-                        <input
-                          type="password"
-                          className="form-control form-control-user"
-                          id="exampleInputPassword"
-                          placeholder="Password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          required
-                        />
-                      </div> */}
                       <div className="form-group row">
                             <div className="col-sm-6 mb-3 mb-sm-0">
                                 <input type="password" className="form-control form-control-user"
                                     id="exampleInputPassword" placeholder="New password" value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    required />
+                                   />
                             </div>
                             <div className="col-sm-6">
                                 <input type="password" className="form-control form-control-user"
                                     id="exampleRepeatPassword" placeholder="Repeat Password" value={passwordConfirm}
                                     onChange={(e) => setPasswordConfirm(e.target.value)}
-                                    required />
+                                    />
                             </div>
                       </div>
                       <button type="submit" className="btn btn-primary btn-user btn-block">

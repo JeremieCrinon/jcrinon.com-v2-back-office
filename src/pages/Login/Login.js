@@ -18,10 +18,14 @@ function Login({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail, set
 
       try{
 
+        if(email === '' || password === ''){
+          throw new Error("no email or passwd")
+        }
+
         const response = await requestWithBodyWithoutJWT(config.apiUrl + '/api/login_check', { email, password });
       
         if(response == 401 || response == 403){
-          throw new Error;
+          throw new Error("incorrect credentials");
         }
 
         if(response == 500){
@@ -33,7 +37,7 @@ function Login({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail, set
         const response2 = await requestWithoutBodyWithJWT(config.apiUrl + '/api/isuser', data.token);
 
         if(response2 == 401 || response2 == 403){
-          throw new Error;
+          setError500(true);
         }
 
         if(response2 == 500){
@@ -52,8 +56,13 @@ function Login({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail, set
 
         navigate('/');
 
-      } catch {
-        setError('Login failed. Please check your credentials and try again.');
+      } catch(error) {
+        if(error.message === "no email or passwd"){
+          setError('Please enter an email and password');
+        } else{
+          setError('Login failed. Please check your credentials and try again.');
+        }
+        
       }
 
   };
@@ -81,7 +90,6 @@ function Login({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail, set
                             placeholder="Enter Email Address..."
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            required
                           />
                         </div>
                         <div className="form-group">
@@ -92,7 +100,6 @@ function Login({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail, set
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            required
                           />
                         </div>
                         <button type="submit" className="btn btn-primary btn-user btn-block">

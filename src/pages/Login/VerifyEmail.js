@@ -14,23 +14,15 @@ function VerifyEmail({setIsUnverifiedEmail, token, setFlashMessage, setError500}
     event.preventDefault();
 
     try {
-      // const response = await fetch(config.apiUrl + '/api/verify/email', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': 'Bearer ' + token
-      //   },
-      //   body: JSON.stringify({ code })
-      // });
 
-      // if (!response.ok) {
-      //   throw new Error('Email verification failed');
-      // }
+      if(code === ''){
+        throw new Error("no code")
+      }
 
       const response = await requestWithBodyWithJWT(config.apiUrl + '/api/verify/email', { code }, token)
 
       if(response == 401 || response == 403){
-        throw new Error;
+        throw new Error("incorrect code");
       }
 
       if(response == 500){
@@ -42,8 +34,11 @@ function VerifyEmail({setIsUnverifiedEmail, token, setFlashMessage, setError500}
       navigate('/');
 
     } catch (error) {
-      setError('Email verification failed, please verify the code and try again.');
-      console.error('Error:', error);
+      if(error.message === "no code"){
+        setError('Please enter the code sent by email.');
+      } else {
+        setError('Email verification failed, please verify the code and try again.');
+      }
     }
   };
 
@@ -67,7 +62,6 @@ function VerifyEmail({setIsUnverifiedEmail, token, setFlashMessage, setError500}
                           className="form-control form-control-user"
                           placeholder="Enter the code sent by mail"
                           onChange={(e) => setCode(e.target.value)}
-                          required
                         />
                       </div>
                       <button type="submit" className="btn btn-primary btn-user btn-block">
