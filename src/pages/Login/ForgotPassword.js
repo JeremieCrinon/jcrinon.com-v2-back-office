@@ -15,10 +15,14 @@ function ForgotPassword({setError500, setFlashMessage}){
 
       try{
 
+        if(recoverEmail === ''){
+          throw new Error("no email");
+        }
+
         const response = await requestWithBodyWithoutJWT(config.apiUrl + '/api/forgot/password', { email: recoverEmail });
       
         if(response == 401 || response == 403){
-          throw new Error;
+          throw new Error("incorrect email");
         }
 
         if(response == 500){
@@ -31,7 +35,11 @@ function ForgotPassword({setError500, setFlashMessage}){
         navigate("/login");
 
       } catch(error) {
-        setError('Changing password failed. Please check the email and try again.');
+        if(error.message === "no email"){
+          setError('Please enter you\'re email!');
+        } else {
+          setError('Changing password failed. Please check the email and try again.');
+        }
       }
 
   };
@@ -60,7 +68,6 @@ function ForgotPassword({setError500, setFlashMessage}){
                             placeholder="Enter Email Address..."
                             onChange={(e) => setRecoverEmail(e.target.value)}
                             value={recoverEmail}
-                            required
                         />
                         </div>
                         <button type="submit" className="btn btn-primary btn-user btn-block">

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { requestWithoutBodyWithoutJWT, requestWithoutBodyWithJWT, baseAdmin } from '../../utils';
 import config from '../../config.json';
 
-function ReadDeleteProject({token, setError500, setFlashMessage, setToken, setIsAdmin}){
+function ReadDeleteProject({token, setError500, setFlashMessage, setToken, setUserRoles, userRoles}){
 
     const [projects, setProjects] = useState([]);
     
@@ -141,7 +141,7 @@ function ReadDeleteProject({token, setError500, setFlashMessage, setToken, setIs
         </div>
     )
 
-    return baseAdmin(content, {setToken, setIsAdmin})
+    return baseAdmin(content, {setToken, setUserRoles, userRoles});
 }
 
 export default ReadDeleteProject;

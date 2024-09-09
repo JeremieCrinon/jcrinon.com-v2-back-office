@@ -6,7 +6,7 @@ import { requestWithBodyWithoutJWT, requestWithoutBodyWithJWT } from '../../util
 import config from '../../config.json';
 
 
-function Login({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail, setUserEmail, setError500, setFlashMessage}){
+function Login({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEmail, setUserEmail, setError500, setFlashMessage}){
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -46,11 +46,11 @@ function Login({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail, set
 
         const data2 = await response2.json();
 
-        const isAdmin = data2.result;
+        // const isAdmin = data2.result;
 
         setIsUnverifiedEmail(data2.roles.includes("UNVERIFIED_EMAIL"));
         setIsNewAccount(data2.roles.includes("NEW_ACCOUNT"));
-        setIsAdmin(isAdmin);
+        setUserRoles(data2.roles);
         setToken(data.token);
         setUserEmail(email);
 

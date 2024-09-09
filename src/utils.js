@@ -97,13 +97,13 @@ export async function requestWithBodyWithJWT(url, body, jwt){
     }
 }
 
-export function baseAdmin(content, {setToken, setIsAdmin}){
+export function baseAdmin(content, {setToken, setUserRoles, userRoles}){
     return (
         <div id="wrapper">
-            <Header />
+            <Header userRoles={userRoles} />
             <div id="content-wrapper" className="d-flex flex-column">
                 <div id="content">
-                    <Topbar setToken={setToken} setIsAdmin={setIsAdmin} />
+                    <Topbar setToken={setToken} setUserRoles={setUserRoles} />
                     <div className="container-fluid">
                         {content}
                     </div>

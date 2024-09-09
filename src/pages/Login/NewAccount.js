@@ -3,7 +3,7 @@ import { requestWithBodyWithJWT } from '../../utils';
 
 import config from '../../config.json';
 
-function NewAccount({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail, userEmail, token, setFlashMessage, setError500}){
+function NewAccount({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEmail, userEmail, token, setFlashMessage, setError500}){
   const [email, setEmail] = useState(userEmail);
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -36,7 +36,7 @@ function NewAccount({setToken, setIsAdmin, setIsNewAccount, setIsUnverifiedEmail
 
       setFlashMessage("Your account has been modified, please log in with the new credentials you provided.")
 
-      setIsAdmin(null);
+      setUserRoles(null);
       setIsNewAccount(null);
       setIsUnverifiedEmail(null);
       setToken(null);

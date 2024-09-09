@@ -5,7 +5,7 @@ import { requestWithoutBodyWithoutJWT, baseAdmin } from '../../utils';
 
 import config from '../../config.json';
 
-function EditProject({token, setError500, setFlashMessage, setToken, setIsAdmin}){
+function EditProject({token, setError500, setFlashMessage, setToken, setUserRoles, userRoles}){
 
     const [name, setName] = useState('');
     const [french_name, setFrench_name] = useState('');
@@ -44,6 +44,30 @@ function EditProject({token, setError500, setFlashMessage, setToken, setIsAdmin}
         getProject();
     }, []);
 
+    const submitAfterVerifications = async (formData) => {
+        try {
+            const response = await fetch(config.apiUrl + '/api/projects/' + id + '/edit', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                body: formData,
+              })
+    
+            if(response.status == 401 || response.status == 403){ // That's an error comming from the user
+                throw new Error("user error");
+            } else if (!response.ok){ // That's an error from either the back-end or front-end, but it ain't comming from the user
+                setError500(true);
+            }
+    
+            setFlashMessage("The project has been edited.");
+            navigate('/projects');
+        } catch (error) {
+            setError('Edit of the project failed. Please check the infos you entered and try again.');
+        }
+        
+    }
+
     const handleSubmit = async () => {
           try{
 
@@ -76,37 +100,51 @@ function EditProject({token, setError500, setFlashMessage, setToken, setIsAdmin}
                     throw new Error("invalid_file_format");
                 }
 
-                // Append the selected image file to the form data
-                formData.append('image', selectedFile);
-            }
+                // Create a FileReader to read the file
+                const reader = new FileReader();
+                
+                // Define a callback function to be executed when the file has been loaded
+                reader.onload = () => {
+                    // Get the image dimensions
+                    const img = new Image();
+                    img.src = reader.result;
 
-            formData.forEach(function(e, key){
-                console.log(key + " : " + e);
-            })
-            
+                    img.onload = () => {
+                        try{
+                            
+                            if(img.width / img.height !== 16/9){
+                                throw new Error("bad aspect ratio");
+                            }
+                            if(img.width < 768){
+                                throw new Error("too small image");
+                            }
+                            // Append the selected image file to the form data
+                            formData.append('image', selectedFile);
+                            // Call a function to send the data after having verified that everything is ok with the image size
+                            submitAfterVerifications(formData);
+                        
+                        } catch (error) {
+                            if (error.message === "bad aspect ratio"){
+                                setError('Please enter an image in the ratio 16/9.');
+                            } else if (error.message === "too small image"){
+                                setError('The image has to be at least 768 px large.');
+                            } else {
+                                setError500(true);
+                            }
+                        };
+                    }
+                    
+                };
 
-            const response = await fetch(config.apiUrl + '/api/projects/' + id + '/edit', {
-                method: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                },
-                body: formData,
-              })
-
-            console.log(await response.json());
-
-            if(response.status == 401 || response.status == 403){ // That's an error comming from the user
-                throw new Error;
-            } else if (!response.ok){ // That's an error from either the back-end or front-end, but it ain't comming from the user
-                setError500(true);
-            }
-
-            setFlashMessage("The project has been edited.");
-            navigate('/projects');
+                // Read the selected file as data URL
+                reader.readAsDataURL(selectedFile);
+            } else {
+                submitAfterVerifications(formData);
+            }   
     
           } catch(error) {
             if(error.message === "no_main_input"){
-                setError('Please enter a name, frenh name, description, and french description.');
+                setError('Please enter a name, french name, description, and french description.');
             } else if (error.message === "no_file"){
                 setError('Please enter an image.');
             } else if (error.message === "no_file"){
@@ -180,7 +218,7 @@ function EditProject({token, setError500, setFlashMessage, setToken, setIsAdmin}
         </div>
     )
 
-    return baseAdmin(content, {setToken, setIsAdmin})
+    return baseAdmin(content, {setToken, setUserRoles, userRoles});
 
 }
 

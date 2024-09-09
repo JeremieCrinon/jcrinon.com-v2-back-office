@@ -5,7 +5,7 @@ import config from '../../config.json';
 
 import { baseAdmin } from '../../utils';
 
-function CreateProject({token, setError500, setFlashMessage, setToken, setIsAdmin}){
+function CreateProject({token, setError500, setFlashMessage, setToken, setUserRoles, userRoles}){
 
     const [name, setName] = useState('');
     const [french_name, setFrench_name] = useState('');
@@ -17,27 +17,8 @@ function CreateProject({token, setError500, setFlashMessage, setToken, setIsAdmi
 
     const navigate = useNavigate();
 
-    const handleSubmit = async () => {
-          try{
-
-            if(name === "" || french_name === "" || description === "" || french_description === ""){
-                throw new Error("no_main_input");
-            }
-
-            const image = document.getElementById('image');
-            const selectedFile = image.files[0];
-
-            if (!selectedFile) {
-                throw new Error("no_file");
-            }
-
-            const acceptedExtensions = ['png', 'jpeg', 'webp', 'jpg'];
-            const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
-
-            if (!acceptedExtensions.includes(fileExtension)) {
-                throw new Error("invalid_file_format");
-            }
-    
+    const submitAfterVerifications = async (selectedFile) => {
+        try{
             const formData = new FormData();
             formData.append('name', name);
             formData.append('french_name', french_name);
@@ -62,28 +43,92 @@ function CreateProject({token, setError500, setFlashMessage, setToken, setIsAdmi
                     'Authorization': 'Bearer ' + token
                 },
                 body: formData,
-              })
+                })
 
             if(response.status == 401 || response.status == 403){ // That's an error comming from the user
-                throw new Error;
+                throw new Error("user error");
             } else if (!response.ok){ // That's an error from either the back-end or front-end, but it ain't comming from the user
                 setError500(true);
             }
 
             setFlashMessage("The project has been created.");
             navigate('/projects');
-    
-          } catch(error) {
-            if(error.message === "no_main_input"){
-                setError('Please enter a name, frenh name, description, and french description.');
-            } else if (error.message === "no_file"){
-                setError('Please enter an image.');
-            } else if (error.message === "no_file"){
-                setError('Only these formats are allowed (png, jpeg, jpg, webp).');
-            } else {
-                setError('Creation of the new project failed. Please check the infos you entered and try again.');
+        } catch (error) {
+            setError("Creation of the new project failed. Please check the infos you entered and try again.")
+        }
+        
+    }
+
+    const handleSubmit = async () => {
+        try{
+
+        if(name === "" || french_name === "" || description === "" || french_description === ""){
+            throw new Error("no_main_input");
+        }
+
+        const image = document.getElementById('image');
+        const selectedFile = image.files[0];
+
+        if (!selectedFile) {
+            throw new Error("no_file");
+        }
+
+        const acceptedExtensions = ['png', 'jpeg', 'webp', 'jpg'];
+        const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
+
+        if (!acceptedExtensions.includes(fileExtension)) {
+            throw new Error("invalid_file_format");
+        }
+
+        // Create a FileReader to read the file
+        const reader = new FileReader();
+        
+        // Define a callback function to be executed when the file has been loaded
+        reader.onload = () => {
+            // Get the image dimensions
+            const img = new Image();
+            img.src = reader.result;
+
+            img.onload = () => {
+                try{
+                
+                    console.log(`Width: ${img.width}, Height: ${img.height}`);
+                    if(img.width / img.height !== 16/9){
+                        throw new Error("bad aspect ratio");
+                    }
+                    if(img.width < 768){
+                        throw new Error("too small image");
+                    }
+                    // Call a function to send the data after having verified that everything is ok with the image size
+                    submitAfterVerifications(selectedFile);
+                
+                } catch (error) {
+                    if (error.message === "bad aspect ratio"){
+                        setError('Please enter an image in the ratio 16/9.');
+                    } else if (error.message === "too small image"){
+                        setError('The image has to be at least 768 px large.');
+                    } else {
+                        setError500(true);
+                    }
+                };
             }
-          }
+            
+        };
+
+        // Read the selected file as data URL
+        reader.readAsDataURL(selectedFile);
+
+        } catch(error) {
+        if(error.message === "no_main_input"){
+            setError('Please enter a name, frenh name, description, and french description.');
+        } else if (error.message === "no_file"){
+            setError('Please enter an image.');
+        } else if (error.message === "no_file"){
+            setError('Only these formats are allowed (png, jpeg, jpg, webp).');
+        } else {
+            setError('Creation of the new project failed. Please check the infos you entered and try again.');
+        }
+        }
     
       };
 
@@ -142,7 +187,7 @@ function CreateProject({token, setError500, setFlashMessage, setToken, setIsAdmi
         </div>
     );
 
-    return baseAdmin(content, setToken={setToken}, setIsAdmin={setIsAdmin})
+    return baseAdmin(content, {setToken, setUserRoles, userRoles});
 
 }
 

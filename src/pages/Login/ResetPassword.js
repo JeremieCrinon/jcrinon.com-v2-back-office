@@ -18,13 +18,17 @@ function ResetPassword({setError500, setFlashMessage}){
       try{
         
         if (newPassword != newPasswordConfirm) {
-            throw new Error("no_same_passwords");
+          throw new Error("no same passwords");
+        }
+
+        if(newPassword === ''){
+          throw new Error("no password");
         }
 
         const response = await requestWithBodyWithoutJWT(config.apiUrl + '/api/reset/password', { code: code, new_password: newPassword });
       
         if(response == 401 || response == 403){
-          throw new Error;
+          throw new Error("no code or problem");
         }
 
         if(response == 500){
@@ -36,11 +40,13 @@ function ResetPassword({setError500, setFlashMessage}){
         setFlashMessage('The password as successfully been changed, you can login with it!');
         navigate("/login");
 
-      } catch {
-        if(error.message === "no_same_passwords"){
-            setError("The password and password confirmation does not match.");
+      } catch(error) {
+        if(error.message === "no same passwords"){
+          setError("The password and password confirmation does not match.");
+        } else if (error.message === "no password") {
+          setError("Please enter a new password");
         } else {
-            setError('Changing password failed. Please check the email and try again.');
+            setError('Changing password failed. Please verify that you did not modified the link, and try again.');
         }
       }
 
@@ -62,22 +68,22 @@ function ResetPassword({setError500, setFlashMessage}){
                      
                     <form className="user" onSubmit={handleSubmit}>
                         <div className="form-group">
-                        <input
-                            type="password"
-                            className="form-control form-control-user"
-                            placeholder="Enter you're new password..."
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            value={newPassword}
-                            required
-                        />
-                        <input
-                            type="password"
-                            className="form-control form-control-user"
-                            placeholder="Confirm password..."
-                            onChange={(e) => setNewPasswordConfirm(e.target.value)}
-                            value={newPasswordConfirm}
-                            required
-                        />
+                          <input
+                              type="password"
+                              className="form-control form-control-user"
+                              placeholder="Enter you're new password..."
+                              onChange={(e) => setNewPassword(e.target.value)}
+                              value={newPassword}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <input
+                              type="password"
+                              className="form-control form-control-user"
+                              placeholder="Confirm password..."
+                              onChange={(e) => setNewPasswordConfirm(e.target.value)}
+                              value={newPasswordConfirm}
+                          />
                         </div>
                         <button type="submit" className="btn btn-primary btn-user btn-block">
                         Reset the password

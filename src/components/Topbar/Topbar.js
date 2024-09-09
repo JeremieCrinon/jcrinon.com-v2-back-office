@@ -1,12 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 
-function Topbar({setToken, setIsAdmin}) {
+function Topbar({setToken, setUserRoles}) {
     function logout(){
-        setIsAdmin(null);
+        setUserRoles(null);
         setToken(null);
         Cookies.remove('token');
-        Cookies.remove('isAdmin');
+        Cookies.remove('userRoles');
         Cookies.remove('isNewAccount');
         Cookies.remove('isUnverifiedEmail');
         Cookies.remove('userEmail');

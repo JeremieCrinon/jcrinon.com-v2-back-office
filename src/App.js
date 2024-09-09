@@ -2,11 +2,9 @@ import React, { useRef, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
-import Header from './components/Header/Header';
-import Topbar from './components/Topbar/Topbar';
-import FlashMessage from './components/FlashMessage/FlashMessage';
-
 import './App.css';
+
+import FlashMessage from './components/FlashMessage/FlashMessage';
 
 import Login from './pages/Login/Login';
 import NewAccount from './pages/Login/NewAccount';
@@ -34,7 +32,7 @@ import config from './config.json';
 function App() {
 
   const [token, setToken] = useState(Cookies.get('token') !== "null" && Cookies.get('token') ? Cookies.get('token') : null);
-  const [isAdmin, setIsAdmin] = useState(Cookies.get('isAdmin') !== "null" && Cookies.get('isAdmin') ? Cookies.get('isAdmin') === 'true' : null);
+  const [userRoles, setUserRoles] = useState(Cookies.get('userRoles') !== "null" && Cookies.get('userRoles') ?  JSON.parse(Cookies.get('userRoles')) : null);
   const [isNewAccount, setIsNewAccount] = useState(Cookies.get('isNewAccount') !== "null" && Cookies.get('isNewAccount') ? Cookies.get('isNewAccount') === 'true' : null);
   const [isUnverifiedEmail, setIsUnverifiedEmail] = useState(Cookies.get('isUnverifiedEmail') !== "null" && Cookies.get('isUnverifiedEmail') ? Cookies.get('isUnverifiedEmail') === 'true' : null);
   const [userEmail, setUserEmail] = useState(Cookies.get('userEmail') !== "null" && Cookies.get('userEmail') ? Cookies.get('userEmail') : null);
@@ -59,10 +57,10 @@ function App() {
   useEffect(() => {
     console.log("Testing connexion");
     if(token === null || token === 'null'){
-      setIsAdmin(null);
+      setUserRoles(null);
       setToken(null);
       Cookies.remove('token');
-      Cookies.remove('isAdmin');
+      Cookies.remove('userRoles');
       Cookies.remove('isNewAccount');
       Cookies.remove('isUnverifiedEmail');
       Cookies.remove('userEmail');
@@ -72,10 +70,10 @@ function App() {
         const response = await requestWithoutBodyWithJWT(config.apiUrl + '/api/isuser', token);
         // console.log(await response.json());
         if(response === 401 || response === 403){
-          setIsAdmin(null);
+          setUserRoles(null);
           setToken(null);
           Cookies.remove('token');
-          Cookies.remove('isAdmin');
+          Cookies.remove('userRoles');
           Cookies.remove('isNewAccount');
           Cookies.remove('isUnverifiedEmail');
           Cookies.remove('userEmail');
@@ -85,10 +83,10 @@ function App() {
           const data = await response.json();
           if(await data.result === null){
             console.log(response.json().result);
-            setIsAdmin(null);
+            setUserRoles(null);
             setToken(null);
             Cookies.remove('token');
-            Cookies.remove('isAdmin');
+            Cookies.remove('userRoles');
             Cookies.remove('isNewAccount');
             Cookies.remove('isUnverifiedEmail');
             Cookies.remove('userEmail');
@@ -104,41 +102,14 @@ function App() {
 
   useEffect(() => {
     Cookies.set('token', token, { expires: 7 });
-    Cookies.set('isAdmin', isAdmin, { expires: 7 });
+    Cookies.set('userRoles', JSON.stringify(userRoles), { expires: 7 });
     Cookies.set('isNewAccount', isNewAccount, { expires: 7 });
     Cookies.set('isUnverifiedEmail', isUnverifiedEmail, { expires: 7 });
     Cookies.set('userEmail', userEmail, { expires: 7 });
-  }, [token, isAdmin, isNewAccount, isUnverifiedEmail, userEmail]);
+  }, [token, userRoles, isNewAccount, isUnverifiedEmail, userEmail]);
 
   return (
     <>
-      {/* {error500 ? (
-        <InternalServerError />
-      ) :
-      token === null ? (
-        <>
-          {flashMessage && (
-            <FlashMessage message={flashMessage} onClose={closeMessage} />
-          )}
-          <Login setToken={setToken} setIsAdmin={setIsAdmin} setIsNewAccount={setIsNewAccount} setIsUnverifiedEmail={setIsUnverifiedEmail} setUserEmail={setUserEmail} setError500={setError500} setFlashMessage={setFlashMessage} />
-        </>
-      ) : 
-      isNewAccount ? (
-        <>
-          {flashMessage && (
-            <FlashMessage message={flashMessage} onClose={closeMessage} />
-          )}
-          <NewAccount setToken={setToken} setIsAdmin={setIsAdmin} setIsNewAccount={setIsNewAccount} setIsUnverifiedEmail={setIsUnverifiedEmail} userEmail={userEmail} token={token} setFlashMessage={setFlashMessage} setError500={setError500} />
-        </>
-      ) : 
-      isUnverifiedEmail ? (
-        <>
-          {flashMessage && (
-            <FlashMessage message={flashMessage} onClose={closeMessage} />
-          )}
-          <VerifyEmail setIsUnverifiedEmail={setIsUnverifiedEmail} token={token} setFlashMessage={setFlashMessage} setError500={setError500} />
-        </>
-      ) : */}
         {flashMessage && (
             <FlashMessage message={flashMessage} onClose={closeMessage} />
         )}
@@ -146,19 +117,23 @@ function App() {
             <AutomaticRedirects error500={error500} token={token} isNewAccount={isNewAccount} isUnverifiedEmail={isUnverifiedEmail} />
             <Routes>
                 {/* Dashboard */}
-                <Route path="/" element={<Dashboard setToken={setToken} setIsAdmin={setIsAdmin} />} />
+                <Route path="/" element={<Dashboard setToken={setToken} setUserRoles={setUserRoles} userRoles={userRoles} />} />
 
                 {/* Login system */}
-                <Route path="/login" element={<Login setToken={setToken} setIsAdmin={setIsAdmin} setIsNewAccount={setIsNewAccount} setIsUnverifiedEmail={setIsUnverifiedEmail} setUserEmail={setUserEmail} setError500={setError500} setFlashMessage={setFlashMessage} />} />
-                <Route path="/new-account" element={<NewAccount setToken={setToken} setIsAdmin={setIsAdmin} setIsNewAccount={setIsNewAccount} setIsUnverifiedEmail={setIsUnverifiedEmail} userEmail={userEmail} token={token} setFlashMessage={setFlashMessage} setError500={setError500} />} />
+                <Route path="/login" element={<Login setToken={setToken} setUserRoles={setUserRoles} setIsNewAccount={setIsNewAccount} setIsUnverifiedEmail={setIsUnverifiedEmail} setUserEmail={setUserEmail} setError500={setError500} setFlashMessage={setFlashMessage} />} />
+                <Route path="/new-account" element={<NewAccount setToken={setToken} setUserRoles={setUserRoles} setIsNewAccount={setIsNewAccount} setIsUnverifiedEmail={setIsUnverifiedEmail} userEmail={userEmail} token={token} setFlashMessage={setFlashMessage} setError500={setError500} />} />
                 <Route path="/verify-email" element={<VerifyEmail setIsUnverifiedEmail={setIsUnverifiedEmail} token={token} setFlashMessage={setFlashMessage} setError500={setError500} />} />
                 <Route path="/forgot/password" element={<ForgotPassword setError500={setError500} setFlashMessage={setFlashMessage} />} />
                 <Route path="/forgot/password/:code" element={<ResetPassword setError500={setError500} setFlashMessage={setFlashMessage} />} />
 
                 {/* Projects CRUD */}
-                <Route path="/projects" element={<ReadDeleteProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setIsAdmin={setIsAdmin} />} />
-                <Route path="/projects/create" element={<CreateProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setIsAdmin={setIsAdmin} />} />
-                <Route path="/projects/:id/edit" element={<EditProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setIsAdmin={setIsAdmin} />} />
+                {userRoles && (userRoles.includes("ROLE_ADMIN") || userRoles.includes("ROLE_PROJECTS")) && (
+                  <>
+                    <Route path="/projects" element={<ReadDeleteProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setUserRoles={setUserRoles} userRoles={userRoles} />} />
+                    <Route path="/projects/create" element={<CreateProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setUserRoles={setUserRoles} userRoles={userRoles} />} />
+                    <Route path="/projects/:id/edit" element={<EditProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setUserRoles={setUserRoles} userRoles={userRoles} />} />
+                  </>
+                )}
 
                 {/* Errors */}
                 <Route path="/500" element={<InternalServerError />} />
