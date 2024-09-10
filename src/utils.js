@@ -82,6 +82,8 @@ export async function requestWithBodyWithJWT(url, body, jwt){
             },
             body: JSON.stringify(body)
           });
+
+        // console.log(await response.json());
     
         if(response.status == 401 || response.status == 403){ // That's an error comming from the user
             return response.status;

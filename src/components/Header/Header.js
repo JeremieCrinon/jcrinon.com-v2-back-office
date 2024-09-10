@@ -33,7 +33,7 @@ function Header({userRoles}){
             </li>
 
             {userRoles && (userRoles.includes("ROLE_ADMIN") || userRoles.includes("ROLE_PROJECTS")) && (
-                <li className={location.pathname === '/projects' || location.pathname === '/projects/create' ? 'active nav-item' : 'nav-item'}>
+                <li className={location.pathname === '/projects' || location.pathname === '/projects/create' || /\/projects\/\d+\/edit$/.test(location.pathname) ? 'active nav-item' : 'nav-item'}>
                     <Link
                     to={"/projects"}
                     className="nav-link"
@@ -41,6 +41,20 @@ function Header({userRoles}){
                         <>
                         <i className="fas fa-fw fa-tachometer-alt"></i>
                         <span>Projects</span>
+                        </>
+                        
+                    </Link>
+                </li>
+            )}
+            {userRoles && (userRoles.includes("ROLE_ADMIN") || userRoles.includes("ROLE_CONTROL_USERS")) && (
+                <li className={location.pathname === '/users' || location.pathname === '/projects/create' || /\/users\/\d+\/edit$/.test(location.pathname) ? 'active nav-item' : 'nav-item'}>
+                    <Link
+                    to={"/users"}
+                    className="nav-link"
+                    >
+                        <>
+                        <i className="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Users</span>
                         </>
                         
                     </Link>

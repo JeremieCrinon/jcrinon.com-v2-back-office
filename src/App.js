@@ -17,6 +17,7 @@ import EditProject from './pages/Projects/Edit';
 import Dashboard from './pages/Dashboard/Dashboard';
 import ForgotPassword from './pages/Login/ForgotPassword';
 import ResetPassword from './pages/Login/ResetPassword';
+import CreateReadDeleteUser from './pages/Users/CreateReadDelete';
 
 import { requestWithoutBodyWithJWT } from './utils';
 
@@ -132,6 +133,11 @@ function App() {
                     <Route path="/projects" element={<ReadDeleteProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setUserRoles={setUserRoles} userRoles={userRoles} />} />
                     <Route path="/projects/create" element={<CreateProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setUserRoles={setUserRoles} userRoles={userRoles} />} />
                     <Route path="/projects/:id/edit" element={<EditProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setUserRoles={setUserRoles} userRoles={userRoles} />} />
+                  </>
+                )}
+                {userRoles && (userRoles.includes("ROLE_ADMIN") || userRoles.includes("ROLE_CONTROL_USERS")) && (
+                  <>
+                    <Route path="/users" element={<CreateReadDeleteUser token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setUserRoles={setUserRoles} userRoles={userRoles} />} />
                   </>
                 )}
 
