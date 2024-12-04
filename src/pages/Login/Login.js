@@ -24,11 +24,11 @@ function Login({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEmail, s
 
         const response = await requestWithBodyWithoutJWT(config.apiUrl + '/api/login_check', { email, password });
       
-        if(response == 401 || response == 403){
+        if(response === 401 || response === 403){
           throw new Error("incorrect credentials");
         }
 
-        if(response == 500){
+        if(response === 500 || response === 404){
           setError500(true);
         }
 
@@ -36,17 +36,15 @@ function Login({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEmail, s
 
         const response2 = await requestWithoutBodyWithJWT(config.apiUrl + '/api/isuser', data.token);
 
-        if(response2 == 401 || response2 == 403){
+        if(response2 === 401 || response2 === 403){
           setError500(true);
         }
 
-        if(response2 == 500){
+        if(response2 === 500 || response2 === 404){
           setError500(true);
         }
 
         const data2 = await response2.json();
-
-        // const isAdmin = data2.result;
 
         setIsUnverifiedEmail(data2.roles.includes("UNVERIFIED_EMAIL"));
         setIsNewAccount(data2.roles.includes("NEW_ACCOUNT"));

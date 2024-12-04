@@ -21,11 +21,11 @@ function EditProject({token, setError500, setFlashMessage, setToken, setUserRole
     const getProject = async () => {
         const response = await requestWithoutBodyWithoutJWT(config.apiUrl + '/api/projects/' + id);
 
-        if(response == 401 || response == 403 || response == 404){
+        if(response === 401 || response === 403 || response === 404){
             setError500(true);
         }
 
-        if(response == 500){
+        if(response === 500){
             setError500(true);
         }
 
@@ -54,7 +54,7 @@ function EditProject({token, setError500, setFlashMessage, setToken, setUserRole
                 body: formData,
               })
     
-            if(response.status == 401 || response.status == 403){ // That's an error comming from the user
+            if(response.status === 401 || response.status === 403){ // That's an error comming from the user
                 throw new Error("user error");
             } else if (!response.ok){ // That's an error from either the back-end or front-end, but it ain't comming from the user
                 setError500(true);

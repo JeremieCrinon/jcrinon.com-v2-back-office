@@ -45,7 +45,7 @@ function CreateProject({token, setError500, setFlashMessage, setToken, setUserRo
                 body: formData,
                 })
 
-            if(response.status == 401 || response.status == 403){ // That's an error comming from the user
+            if(response.status === 401 || response.status === 403){ // That's an error comming from the user
                 throw new Error("user error");
             } else if (!response.ok){ // That's an error from either the back-end or front-end, but it ain't comming from the user
                 setError500(true);

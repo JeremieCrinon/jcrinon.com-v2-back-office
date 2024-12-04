@@ -21,11 +21,11 @@ function VerifyEmail({setIsUnverifiedEmail, token, setFlashMessage, setError500}
 
       const response = await requestWithBodyWithJWT(config.apiUrl + '/api/verify/email', { code }, token)
 
-      if(response == 401 || response == 403){
+      if(response === 401 || response === 403){
         throw new Error("incorrect code");
       }
 
-      if(response == 500){
+      if(response === 500){
         setError500(true);
       }
 

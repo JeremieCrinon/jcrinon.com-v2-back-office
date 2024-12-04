@@ -12,11 +12,11 @@ function ReadDeleteProject({token, setError500, setFlashMessage, setToken, setUs
         try{
             const response = await requestWithoutBodyWithJWT(config.apiUrl + '/api/projects/get', token);
 
-            if(response == 401 || response == 403 || response == 404){
+            if(response === 401 || response === 403 || response === 404){
                 setError500(true);
             }
 
-            if(response == 500){
+            if(response === 500){
                 setError500(true);
             }
 
@@ -33,9 +33,9 @@ function ReadDeleteProject({token, setError500, setFlashMessage, setToken, setUs
         try{
             const response = await requestWithoutBodyWithJWT(config.apiUrl + '/api/projects/' + project_id + '/delete', token);
 
-            if(response == 401 || response == 403){
+            if(response === 401 || response === 403){
                 setError500(true);
-            } else if(response == 500){
+            } else if(response === 500){
                 setError500(true);
             } else {
                 setFlashMessage("The project as been deleted !");
@@ -62,7 +62,7 @@ function ReadDeleteProject({token, setError500, setFlashMessage, setToken, setUs
                                 
                             <Link to={"/projects/create"} className="btn btn-primary btn-icon-split mb-4">
                                 <span className="icon text-white-50">
-                                    <i className="fas fa-flag"></i>
+                                    <i className="fas fa-plus-square"></i>
                                 </span>
                                 <span className="text">Create a project</span>
                             </Link>

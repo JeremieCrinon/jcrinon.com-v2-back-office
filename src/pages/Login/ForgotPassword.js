@@ -21,11 +21,11 @@ function ForgotPassword({setError500, setFlashMessage}){
 
         const response = await requestWithBodyWithoutJWT(config.apiUrl + '/api/forgot/password', { email: recoverEmail });
       
-        if(response == 401 || response == 403){
+        if(response === 401 || response === 403){
           throw new Error("incorrect email");
         }
 
-        if(response == 500){
+        if(response === 500){
           setError500(true);
         }
 

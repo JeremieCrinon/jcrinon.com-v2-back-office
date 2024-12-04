@@ -16,19 +16,19 @@ function NewAccount({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEma
       if(password!==passwordConfirm){
         throw new Error("passwd not matching");
       }
-      if(email === ''){
+      if(email  ===  ''){
         throw new Error("no email");
       }
-      if(password === ''){
+      if(password  ===  ''){
         throw new Error("no passwd");
       }
       const response = await requestWithBodyWithJWT(config.apiUrl + '/api/modify/account/new', { email, password }, token)
 
-      if(response == 401 || response == 403){
+      if(response === 401 || response === 403){
         throw new Error("incorrect credentials");
       }
 
-      if(response == 500){
+      if(response === 500){
         setError500(true);
       }
 
@@ -42,11 +42,11 @@ function NewAccount({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEma
       setToken(null);
 
     } catch (error) {
-      if(error.message === "passwd not matching"){
+      if(error.message  ===  "passwd not matching"){
         setError("Please enter the same password!")
-      } else if(error.message === "no email"){
+      } else if(error.message  ===  "no email"){
         setError("Please enter an email");
-      } else if (error.message === "no passwd"){
+      } else if (error.message  ===  "no passwd"){
         setError("Please enter a password");
       } else {
         setError('Modifying account failed. Please check your infos and try again.');

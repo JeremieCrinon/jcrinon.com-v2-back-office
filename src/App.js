@@ -18,6 +18,8 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import ForgotPassword from './pages/Login/ForgotPassword';
 import ResetPassword from './pages/Login/ResetPassword';
 import CreateReadDeleteUser from './pages/Users/CreateReadDelete';
+import HomeShoppingList from './pages/Shopping_lists/Home';
+import DetailShoppingList from './pages/Shopping_lists/ListDetail';
 
 import { requestWithoutBodyWithJWT } from './utils';
 
@@ -56,7 +58,6 @@ function App() {
 
   //Verifying that the token is still correct on starting
   useEffect(() => {
-    console.log("Testing connexion");
     if(token === null || token === 'null'){
       setUserRoles(null);
       setToken(null);
@@ -67,9 +68,7 @@ function App() {
       Cookies.remove('userEmail');
     } else {
       async function fetchData(){
-        console.log("Making a request");
         const response = await requestWithoutBodyWithJWT(config.apiUrl + '/api/isuser', token);
-        // console.log(await response.json());
         if(response === 401 || response === 403){
           setUserRoles(null);
           setToken(null);
@@ -83,7 +82,6 @@ function App() {
         } else {
           const data = await response.json();
           if(await data.result === null){
-            console.log(response.json().result);
             setUserRoles(null);
             setToken(null);
             Cookies.remove('token');
@@ -102,11 +100,11 @@ function App() {
   }, [])
 
   useEffect(() => {
-    Cookies.set('token', token, { expires: 7 });
-    Cookies.set('userRoles', JSON.stringify(userRoles), { expires: 7 });
-    Cookies.set('isNewAccount', isNewAccount, { expires: 7 });
-    Cookies.set('isUnverifiedEmail', isUnverifiedEmail, { expires: 7 });
-    Cookies.set('userEmail', userEmail, { expires: 7 });
+    Cookies.set('token', token, { expires: 7, sameSite:'strict' });
+    Cookies.set('userRoles', JSON.stringify(userRoles), { expires: 7, sameSite:'strict' });
+    Cookies.set('isNewAccount', isNewAccount, { expires: 7, sameSite:'strict' });
+    Cookies.set('isUnverifiedEmail', isUnverifiedEmail, { expires: 7, sameSite:'strict' });
+    Cookies.set('userEmail', userEmail, { expires: 7, sameSite:'strict' });
   }, [token, userRoles, isNewAccount, isUnverifiedEmail, userEmail]);
 
   return (
@@ -135,9 +133,19 @@ function App() {
                     <Route path="/projects/:id/edit" element={<EditProject token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setUserRoles={setUserRoles} userRoles={userRoles} />} />
                   </>
                 )}
+
+                {/* Users control */}
                 {userRoles && (userRoles.includes("ROLE_ADMIN") || userRoles.includes("ROLE_CONTROL_USERS")) && (
                   <>
                     <Route path="/users" element={<CreateReadDeleteUser token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setUserRoles={setUserRoles} userRoles={userRoles} />} />
+                  </>
+                )}
+
+                {/* Shopping lists */}
+                {userRoles && (userRoles.includes("ROLE_ADMIN") || userRoles.includes("ROLE_SHOPPING_LIST")) && (
+                  <>
+                    <Route path="/shopping-lists" element={<HomeShoppingList token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setUserRoles={setUserRoles} userRoles={userRoles} />} />
+                    <Route path="/shopping-lists/:id" element={<DetailShoppingList token={token} setError500={setError500} setFlashMessage={setFlashMessage} setToken={setToken} setUserRoles={setUserRoles} userRoles={userRoles} />} />
                   </>
                 )}
 

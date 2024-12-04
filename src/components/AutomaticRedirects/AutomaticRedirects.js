@@ -13,7 +13,7 @@ function AutomaticRedirects({ error500, token, isNewAccount, isUnverifiedEmail }
 
     useEffect(() => {
         const verifyPathIsNotForgotPasswordRegex = /^\/forgot\/password\/.*$/;
-        if((token === null || token == 'null') && (location.pathname !== '/500' && location.pathname !== '/forgot/password' && !verifyPathIsNotForgotPasswordRegex.test(location.pathname))) {
+        if((token === null || token === 'null') && (location.pathname !== '/500' && location.pathname !== '/forgot/password' && !verifyPathIsNotForgotPasswordRegex.test(location.pathname))) {
             navigate('/login');
         }
     }, [token, navigate, location.pathname])

@@ -1,4 +1,4 @@
 {
     "apiUrl": "http://api.jcrinon.com.test",
-    "ownUrl": "http://apps.jcrinon.com.test"
+    "ownUrl": "http://localhost:3001"
 }

@@ -27,11 +27,11 @@ function ResetPassword({setError500, setFlashMessage}){
 
         const response = await requestWithBodyWithoutJWT(config.apiUrl + '/api/reset/password', { code: code, new_password: newPassword });
       
-        if(response == 401 || response == 403){
+        if(response === 401 || response === 403){
           throw new Error("no code or problem");
         }
 
-        if(response == 500){
+        if(response === 500){
           setError500(true);
         }
 

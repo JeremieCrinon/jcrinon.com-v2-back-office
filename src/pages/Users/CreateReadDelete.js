@@ -1,12 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { requestWithoutBodyWithJWT, baseAdmin, requestWithBodyWithJWT } from '../../utils';
 import config from '../../config.json';
 
 function CreateReadDeleteUser({token, setError500, setFlashMessage, setToken, setUserRoles, userRoles}){
-
-    const navigate = useNavigate();
 
     const [users, setUsers] = useState([]);
     const [possibleRoles, setPossibleRoles] = useState([]);
@@ -18,11 +15,11 @@ function CreateReadDeleteUser({token, setError500, setFlashMessage, setToken, se
         try{
             const response = await requestWithoutBodyWithJWT(config.apiUrl + '/api/users', token);
 
-            if(response == 401 || response == 403 || response == 404){
+            if(response === 401 || response === 403 || response === 404){
                 setError500(true);
             }
 
-            if(response == 500){
+            if(response === 500){
                 setError500(true);
             }
 
@@ -39,11 +36,11 @@ function CreateReadDeleteUser({token, setError500, setFlashMessage, setToken, se
         try{
             const response = await requestWithoutBodyWithJWT(config.apiUrl + '/api/users/roles', token);
 
-            if(response == 401 || response == 403 || response == 404){
+            if(response === 401 || response === 403 || response === 404){
                 setError500(true);
             }
 
-            if(response == 500){
+            if(response === 500){
                 setError500(true);
             }
 
@@ -62,17 +59,17 @@ function CreateReadDeleteUser({token, setError500, setFlashMessage, setToken, se
                 throw new Error("no_email");
             }
 
-            if(choosedRoles.length == 0){
+            if(choosedRoles.length === 0){
                 throw new Error("no_roles");
             }
 
             const response = await requestWithBodyWithJWT(config.apiUrl + '/api/users/new', { email: user_email, roles: choosedRoles }, token);
 
-            if(response == 401 || response == 403 || response == 500){
+            if(response === 401 || response === 403 || response === 500){
                 setError500(true);
             }
 
-            const data = await response.json();
+            await response.json();
 
             setFlashMessage("The user has successfully been created!");
             setChoosedRoles([]);
@@ -107,9 +104,9 @@ function CreateReadDeleteUser({token, setError500, setFlashMessage, setToken, se
             try{
                 const response = await requestWithoutBodyWithJWT(config.apiUrl + '/api/users/' + user_id + '/delete', token);
     
-                if(response == 401 || response == 403){
+                if(response === 401 || response === 403){
                     setError500(true);
-                } else if(response == 500){
+                } else if(response === 500){
                     setError500(true);
                 } else {
                     setFlashMessage("The user as been deleted !");

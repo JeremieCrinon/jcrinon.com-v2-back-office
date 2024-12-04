@@ -3,8 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 
 function Header({userRoles}){  
     const location = useLocation();
-    
-    const underlineRef = useRef(null);
 
     return(
       <>
@@ -25,8 +23,8 @@ function Header({userRoles}){
                 className="nav-link"
                 >
                     <>
-                      <i className="fas fa-fw fa-tachometer-alt"></i>
-                      <span>Dashboard</span>
+                      <i className="fas fa-fw fa-home"></i>
+                      <span>Home</span>
                     </>
                     
                 </Link>
@@ -39,7 +37,7 @@ function Header({userRoles}){
                     className="nav-link"
                     >
                         <>
-                        <i className="fas fa-fw fa-tachometer-alt"></i>
+                        <i className="fas fa-fw fa-project-diagram"></i>
                         <span>Projects</span>
                         </>
                         
@@ -47,14 +45,29 @@ function Header({userRoles}){
                 </li>
             )}
             {userRoles && (userRoles.includes("ROLE_ADMIN") || userRoles.includes("ROLE_CONTROL_USERS")) && (
-                <li className={location.pathname === '/users' || location.pathname === '/projects/create' || /\/users\/\d+\/edit$/.test(location.pathname) ? 'active nav-item' : 'nav-item'}>
+                <li className={location.pathname === '/users' || /\/users\/\d+\/edit$/.test(location.pathname) ? 'active nav-item' : 'nav-item'}>
                     <Link
                     to={"/users"}
                     className="nav-link"
                     >
                         <>
-                        <i className="fas fa-fw fa-tachometer-alt"></i>
+                        <i className="fas fa-fw fa-user"></i>
                         <span>Users</span>
+                        </>
+                        
+                    </Link>
+                </li>
+            )}
+
+            {userRoles && (userRoles.includes("ROLE_ADMIN") || userRoles.includes("ROLE_SHOPPING_LIST")) && (
+                <li className={location.pathname === '/shopping-lists' || /\/shopping-lists\/\d+\/$/.test(location.pathname) || /\/shopping-lists\/\d$/.test(location.pathname) ? 'active nav-item' : 'nav-item'}>
+                    <Link
+                    to={"/shopping-lists"}
+                    className="nav-link"
+                    >
+                        <>
+                        <i className="fas fa-fw fa-list"></i>
+                        <span>Shopping lists</span>
                         </>
                         
                     </Link>
