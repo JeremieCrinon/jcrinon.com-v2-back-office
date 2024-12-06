@@ -4,6 +4,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { requestWithoutBodyWithJWT, baseAdmin, requestWithBodyWithJWT } from '../../utils';
 import config from '../../config.json';
 
+import AddArticle from '../../components/ShoppingLists/AddArticle/AddArticle';
+
 function DetailShoppingList({token, setError500, setFlashMessage, setToken, setUserRoles, userRoles}){
 
     const navigate = useNavigate();
@@ -85,8 +87,18 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
                                 </div>
                             <div className="card-body">
 
+                                <AddArticle token={token} setError500={setError500} setFlashMessage={setFlashMessage} shoppingListContent={articles} requestShoppingListContent={requestShoppingListContent} />
+
                                 {/* User error message */}
                                 {error && <div className="alert alert-danger mt-3">{error}</div>}
+
+                                {/* Button trigger modal create shopping list */}
+                                <button type="button" className="btn btn-primary btn-icon-split mb-4" data-toggle="modal" data-target="#addArticleModal">
+                                    <span className="icon text-white-50">
+                                        <i className="fas fa-plus-square"></i>
+                                    </span>
+                                    <span className="text">Add an article to {shoppingListName}</span>
+                                </button>
 
                                 <div className="table-responsive">
                                     <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
