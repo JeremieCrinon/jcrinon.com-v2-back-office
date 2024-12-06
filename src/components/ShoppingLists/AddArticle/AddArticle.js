@@ -17,6 +17,8 @@ function AddArticle({token, setError500, setFlashMessage, shoppingListContent, r
 
     const [articles, setArticles] = useState([]);
     const [filteredArticles, setFilteredArticles] = useState([]);
+    const [articleCategory, setArticleCategory] = useState([]);
+    const [noCategoryArticles, setNoCategoryArticles] = useState([]);
 
     const requestArticles = async () => {
         try {
@@ -33,6 +35,41 @@ function AddArticle({token, setError500, setFlashMessage, shoppingListContent, r
             setError500(true);
         }
     }
+
+    const putArticlesByCategory = async () => {
+        const articleCategories = [];
+        const noCategoryArticles = [];
+      
+        // Loop over the filtered articles and add them to their respective categories
+        for (const article of filteredArticles) {
+            if (!article.categories.length) {
+                noCategoryArticles.push(article);
+                continue;
+            }
+      
+            for (const category of article.categories) {
+                let currentCategory = articleCategories[category.id] || null;
+        
+                // If the category is not already in articleCategories, add it
+                if (!currentCategory) {
+                    currentCategory = {
+                        id: category.id,
+                        name: category.name,
+                        articles: []
+                    };
+                    articleCategories[category.id] = currentCategory;
+                }
+        
+                // Add the article to its category if it's not already there
+                if (!currentCategory.articles.includes(article)) {
+                    currentCategory.articles.push(article);
+                }
+            }
+        }
+        setArticleCategory(Object.values(articleCategories));
+        setNoCategoryArticles(Object.values(noCategoryArticles));
+      };
+    
 
     const addArticle = async (articleId) => {
         try {
@@ -63,6 +100,10 @@ function AddArticle({token, setError500, setFlashMessage, shoppingListContent, r
     useEffect(() => {
         filterArticles();
     }, [shoppingListContent, articles]);
+
+    useEffect(() => {
+        putArticlesByCategory();
+    }, [filteredArticles]);
 
     const content = (
         <div className="modal fade" id="addArticleModal" tabIndex="-1" role="dialog" aria-hidden="true">
@@ -105,8 +146,27 @@ function AddArticle({token, setError500, setFlashMessage, shoppingListContent, r
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                        
-                                        { filteredArticles && filteredArticles.map((article, index) => (
+                                        { articleCategory && articleCategory.map((category, index) => (
+                                            <>
+                                            <tr key={index}>
+                                                <td>{category.name}</td>
+                                            </tr>
+                                            { category.articles && category.articles.map((article, index2) => (
+                                                <tr key={`${index} ${index2}`}>
+                                                    <td>
+                                                        <a href="#" className="btn btn-primary" onClick={() => addArticle(article.id)} >
+                                                            <span className="text">+</span>
+                                                        </a> 
+                                                    </td>
+                                                    <td>{article.name}</td>
+                                                </tr>
+                                            ))}
+                                            </>
+                                        ))}
+                                        <tr>
+                                            <td>Other articles</td>
+                                        </tr>
+                                        { noCategoryArticles && noCategoryArticles.map((article, index) => (
                                             <tr key={index}>
                                                 <td>
                                                     <a href="#" className="btn btn-primary" onClick={() => addArticle(article.id)} >
