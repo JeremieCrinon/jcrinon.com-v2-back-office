@@ -18,16 +18,26 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
 
     const [shoppingListName, setShoppingListName] = useState('');
     const [articles, setArticles] = useState([]);
+
+    const [permission, setPermission] = useState(true);
     
     async function requestShoppingListName() {
         try{
             const response = await requestWithoutBodyWithJWT(config.apiUrl + '/api/shopping-list/shopping-list/mine', token); // Not really efficient, I know, but users shall not have that much lists, and their should not be millions of user
 
             if(response === 401 || response === 403 || response === 404 || response === 500){
-                setError500(true);
+                throw new Error();
             }
 
             const data = await response.json();
+
+            const response2 = await requestWithoutBodyWithJWT(config.apiUrl + '/api/shopping-list/shopping-list/invited', token); // Not really efficient, I know, but users shall not have that much lists, and their should not be millions of user
+
+            if(response2 === 401 || response2 === 403 || response2 === 404 || response2 === 500){
+                throw new Error("vvv");
+            }
+
+            const data2 = await response2.json();
 
             let hasFound = false
 
@@ -38,13 +48,21 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
                 }
             });
 
+            data2.forEach(e => {
+                if (e.id === id) {
+                    setShoppingListName(e.name);
+                    setPermission(e.permission);
+                    hasFound = true;
+                }
+            });
+
             if(!hasFound){
                 navigate('/404');
             } else {
                 requestShoppingListContent();
             }     
             
-        } catch{
+        } catch(error) {
             setError500(true);
         }
         
@@ -87,18 +105,22 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
                                 </div>
                             <div className="card-body">
 
-                                <AddArticle token={token} setError500={setError500} setFlashMessage={setFlashMessage} shoppingListContent={articles} requestShoppingListContent={requestShoppingListContent} />
+                                {permission && <AddArticle token={token} setError500={setError500} setFlashMessage={setFlashMessage} shoppingListContent={articles} requestShoppingListContent={requestShoppingListContent} />}
 
                                 {/* User error message */}
                                 {error && <div className="alert alert-danger mt-3">{error}</div>}
 
-                                {/* Button trigger modal create shopping list */}
-                                <button type="button" className="btn btn-primary btn-icon-split mb-4" data-toggle="modal" data-target="#addArticleModal">
-                                    <span className="icon text-white-50">
-                                        <i className="fas fa-plus-square"></i>
-                                    </span>
-                                    <span className="text">Add an article to {shoppingListName}</span>
-                                </button>
+
+                                {/* Button trigger modal add to shopping list */}
+                                {permission && (
+                                    <button type="button" className="btn btn-primary btn-icon-split mb-4" data-toggle="modal" data-target="#addArticleModal">
+                                        <span className="icon text-white-50">
+                                            <i className="fas fa-plus-square"></i>
+                                        </span>
+                                        <span className="text">Add an article to {shoppingListName}</span>
+                                    </button>
+                                )}
+                                
 
                                 <div className="table-responsive">
                                     <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">

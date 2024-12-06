@@ -9,6 +9,7 @@ function HomeShoppingList({token, setError500, setFlashMessage, setToken, setUse
     const [error, setError] = useState('');
 
     const [shoppingLists, setShoppingLists] = useState([]);
+    const [invitedLists, setInvitedLists] = useState([]);
 
     const [newListName, setNewListName] = useState('');
     
@@ -29,6 +30,23 @@ function HomeShoppingList({token, setError500, setFlashMessage, setToken, setUse
             const data = await response.json();
         
             setShoppingLists([...Object.values(data)])
+        } catch{
+            setError500(true);
+        }
+        
+    }
+
+    async function requestInvitedLists() {
+        try{
+            const response = await requestWithoutBodyWithJWT(config.apiUrl + '/api/shopping-list/shopping-list/invited', token);
+
+            if(response === 401 || response === 403 || response === 404 || response === 500){
+                setError500(true);
+            }
+
+            const data = await response.json();
+        
+            setInvitedLists([...Object.values(data)])
         } catch{
             setError500(true);
         }
@@ -58,7 +76,7 @@ function HomeShoppingList({token, setError500, setFlashMessage, setToken, setUse
             setNewListName("");
             setFlashMessage("The shopping list has been created.");
             requestShoppingLists();
-
+            requestInvitedLists();
         } catch(error) {
             if(error.message === "no_main_input"){
                 setError('Please enter a name.');
@@ -114,6 +132,7 @@ function HomeShoppingList({token, setError500, setFlashMessage, setToken, setUse
             setEditShoppingListName("");
             setFlashMessage("The shopping list has been modified.");
             requestShoppingLists();
+            requestInvitedLists();
 
         } catch (error) {
             if(error.message === "no_name") {
@@ -126,6 +145,7 @@ function HomeShoppingList({token, setError500, setFlashMessage, setToken, setUse
 
     useEffect(() => {
         requestShoppingLists();
+        requestInvitedLists();
     }, []);
 
     const content = (
@@ -230,6 +250,7 @@ function HomeShoppingList({token, setError500, setFlashMessage, setToken, setUse
                                     <span className="text">Create a new shopping list</span>
                                 </button>
 
+                                {/* Table for user's lists */}
                                 <div className="table-responsive">
                                     <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
                                         <thead>
@@ -276,6 +297,64 @@ function HomeShoppingList({token, setError500, setFlashMessage, setToken, setUse
                                                             </span>
                                                             <span className="text">Delete the shopping list</span>
                                                         </a> 
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <h1 className="h3 mb-2 text-gray-800">Invited lists</h1>
+                                <p className="">The lists you have been invited by another user to see, and maybe edit. If the buttons to edit are grayed, it means that you only see it.</p>
+
+                                {/* Table for invited lists */}
+                                <div className="table-responsive">
+                                    <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>View shopping list</th>
+                                                <th>Edit the name</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>View shopping list</th>
+                                                <th>Edit the name</th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            
+                                            { invitedLists && invitedLists.map((shoppingList, index) => (
+                                                <tr key={index}>
+                                                    <td>{shoppingList.name}</td>
+                                                    <td>
+                                                        <Link to={`/shopping-lists/${shoppingList.id}`} className="btn btn-primary btn-icon-split">
+                                                            <span className="icon text-white-50">
+                                                                <i className="fas fa-arrow-right"></i>
+                                                            </span>
+                                                            <span className="text">View the list</span>
+                                                        </Link>
+                                                    </td>
+                                                    <td>
+                                                        {shoppingList.permission && (
+                                                            <a href="#" className="btn btn-secondary btn-icon-split" data-toggle="modal" data-target="#editShoppingListModal" onClick={() => {setEditShoppingListId(shoppingList.id); setEditShoppingListName(shoppingList.name)}} >
+                                                                <span className="icon text-white-50">
+                                                                    <i className="fas fa-arrow-right"></i>
+                                                                </span>
+                                                                <span className="text">Edit the name</span>
+                                                            </a> 
+                                                        )}
+                                                        {!shoppingList.permission && (
+                                                            <a href="#" className="btn btn-light btn-icon-split">
+                                                                <span className="icon text-white-50">
+                                                                    <i className="fas fa-lock"></i>
+                                                                </span>
+                                                                <span className="text">Edit the name</span>
+                                                            </a> 
+                                                        )}
+                                                        
                                                     </td>
                                                 </tr>
                                             ))}

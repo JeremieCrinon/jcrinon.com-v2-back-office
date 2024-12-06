@@ -62,15 +62,9 @@ function CreateArticle({token, setError500, setFlashMessage, setCreateArticle, r
 
                 <form className="user col-lg-12">
                     <div className="form-group row">
-                        <div className="col-lg-12 mb-3 mb-sm-0">
-                            <form className="user col-lg-12">
-                                <div className="form-group row">
-                                    <div className="col-lg-6 mb-3 mb-sm-0">
-                                        <input type="text" className="form-control articleNameInput"
-                                            placeholder="Name" id="name" onChange={(e) => setArticleName(e.target.value)} />
-                                    </div>
-                                </div>
-                            </form>
+                        <div className="col-lg-6 mb-3 mb-sm-0">
+                            <input type="text" className="form-control articleNameInput"
+                                placeholder="Name" id="name" onChange={(e) => setArticleName(e.target.value)} />
                         </div>
                     </div>
                 </form>
