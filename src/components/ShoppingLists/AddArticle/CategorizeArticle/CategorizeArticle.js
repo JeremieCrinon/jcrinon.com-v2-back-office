@@ -6,6 +6,7 @@ import { requestWithBodyWithJWT, requestWithoutBodyWithJWT } from '../../../../u
 import config from '../../../../config.json';
 
 import CreateCategory from './CreateCategory/CreateCategory';
+import EditCategory from './EditCategory/EditCategory';
 
 function CategorizeArticle({token, setError500, setFlashMessage, articleToCategorizeId, setArticleToCategorizeId, requestArticles}){
 
@@ -16,6 +17,9 @@ function CategorizeArticle({token, setError500, setFlashMessage, articleToCatego
     const [articleToCategorize, setArticleToCategorize] = useState(null);
 
     const [createCategory, setCreateCategory] = useState(false);
+
+    const [categoryToEdit, setCategoryToEdit] = useState(null);
+    const [newCategoryName, setNewCategoryName] = useState("");
 
     const requestCategories = async () => {
         try {
@@ -90,6 +94,22 @@ function CategorizeArticle({token, setError500, setFlashMessage, articleToCatego
         }
     }
 
+    const deleteCategory = async (category_id) => {
+        try {
+            const response = await requestWithoutBodyWithJWT(`${config.apiUrl}/api/shopping-list/category-article/${category_id}/delete`, token);
+
+            if(response === 401 || response === 403 || response === 404 || response === 500){
+                throw new Error();
+            }
+
+            requestCategories();
+            requestArticles();
+            requestArticleToCategorize();
+        } catch (error) {
+            setError500(true);
+        }
+    }
+
     useEffect(() => {
         requestCategories();
         requestArticleToCategorize();
@@ -100,7 +120,10 @@ function CategorizeArticle({token, setError500, setFlashMessage, articleToCatego
         {createCategory && (
             <CreateCategory token={token} setError500={setError500} setFlashMessage={setFlashMessage} requestCategories={requestCategories} setCreateCategory={setCreateCategory} />
         )} 
-        {!createCategory && (
+        {!createCategory && categoryToEdit !== null && (
+            <EditCategory token={token} setError500={setError500} setFlashMessage={setFlashMessage} requestCategories={requestCategories} categoryToEdit={categoryToEdit} setCategoryToEdit={setCategoryToEdit} newCategoryName={newCategoryName} setNewCategoryName={setNewCategoryName} requestArticles={requestArticles} />
+        )}
+        {!createCategory && categoryToEdit === null && (
             <div className="modal-content">
                 <div className="modal-header">
                     <h5 className="modal-title" id="createArticleModalLabel">Categorize the article "{articleToCategorize && articleToCategorize.name}"</h5>
@@ -158,6 +181,20 @@ function CategorizeArticle({token, setError500, setFlashMessage, articleToCatego
                                             </td>
                                         )}
                                         <td>{category.name}</td>
+                                        <td>
+                                            <a href="#" className="btn btn-secondary btn-icon-split" onClick={() => {setCategoryToEdit(category); setNewCategoryName(category.name)}}>
+                                                <span className="icon text-white-50">
+                                                    <i className="fas fa-pen"></i>
+                                                </span>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="#" className="btn btn-danger btn-icon-split" onClick={() => deleteCategory(category.id)} >
+                                                <span className="icon text-white-50">
+                                                    <i className="fas fa-trash"></i>
+                                                </span>
+                                            </a> 
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
