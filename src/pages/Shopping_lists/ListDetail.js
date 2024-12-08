@@ -153,6 +153,26 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
         value ? addRecurringArticle(article_id) : removeRecurringArticle(article_id);
     }
 
+    const checkArticle = async (article_id, is_checked) => {
+        try {
+            const response = await requestWithBodyWithJWT(`${config.apiUrl}/api/shopping-list/shopping-list-article/check`, {shopping_list_id: id, article_id: article_id, is_checked: is_checked}, token);
+
+            if(response === 401 || response === 403 || response === 404 || response === 500){
+                throw new Error();
+            }
+        } catch (error) {
+            setError500(true);
+        }
+    }
+
+    const handleCheckArticleChange = async (article_id) => {
+        const button = document.querySelector(`#checkArticle${article_id}`);
+
+        const value = button.checked;
+
+        checkArticle(article_id, value);
+    }
+
     const resetList = async () => {
         try {
             const response = await requestWithBodyWithJWT(`${config.apiUrl}/api/shopping-list/shopping-list-article/reset`, {shopping_list_id: id}, token);
@@ -230,6 +250,7 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
                                     <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
                                         <thead>
                                             <tr>
+                                                <th>Buyed</th>
                                                 <th>Name</th>
                                                 <th>Recurring</th>
                                                 <th>Remove from the list</th>
@@ -237,6 +258,7 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
                                         </thead>
                                         <tfoot>
                                             <tr>
+                                                <th>Buyed</th>
                                                 <th>Name</th>
                                                 <th>Recurring</th>
                                                 <th>Remove from the list</th>
@@ -246,6 +268,12 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
                                             
                                             { articles && articles.map((article, index) => (
                                                 <tr key={index}>
+                                                    <td>
+                                                        <div className="form-check">
+                                                            <input type="checkbox" className="form-check-input" id={`checkArticle${article.id}`} defaultChecked={article.checked} onChange={() => handleCheckArticleChange(article.id)} disabled={!permission} />
+                                                            <label className="form-check-label" htmlFor={`checkArticle${article.id}`}></label>
+                                                        </div>
+                                                    </td>
                                                     <td>{article.name}</td>
                                                     <td>
                                                         <div className="custom-control custom-switch">
