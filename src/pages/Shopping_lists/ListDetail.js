@@ -18,6 +18,7 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
 
     const [shoppingListName, setShoppingListName] = useState('');
     const [articles, setArticles] = useState([]);
+    const [recurringArticlesId, setRecurringArticlesId] = useState([]);
 
     const [permission, setPermission] = useState(true);
     
@@ -84,6 +85,28 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
         }
     }
 
+    const requestRecurringArticles = async () => {
+        try {
+            const response = await requestWithoutBodyWithJWT(`${config.apiUrl}/api/shopping-list/recurring-article/${id}/content`, token);
+
+            if(response === 401 || response === 403 || response === 404 || response === 500){
+                setError500(true);
+            }
+
+            const data = await response.json();
+
+            let ids = [];
+
+            data.forEach(e => {
+                ids.push(e.id);
+            });
+
+            setRecurringArticlesId(ids);
+        } catch (error) {
+            setError500(true);
+        }
+    }
+
     const removeArticle = async (article_id) => {
         try {
             const response = await requestWithBodyWithJWT(config.apiUrl + `/api/shopping-list/shopping-list-article/delete`, {shopping_list_id: id, article_id: article_id}, token);
@@ -98,8 +121,41 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
         }
     }
 
+    const addRecurringArticle = async (article_id) => {
+        try {
+            const response = await requestWithBodyWithJWT(`${config.apiUrl}/api/shopping-list/recurring-article/new`, {shopping_list_id: id, article_id: article_id}, token);
+
+            if(response === 401 || response === 403 || response === 404 || response === 500){
+                throw new Error();
+            }
+        } catch (error) {
+            setError500(true);
+        }
+    }
+
+    const removeRecurringArticle = async (article_id) => {
+        try {
+            const response = await requestWithBodyWithJWT(`${config.apiUrl}/api/shopping-list/recurring-article/delete`, {shopping_list_id: id, article_id: article_id}, token);
+
+            if(response === 401 || response === 403 || response === 404 || response === 500){
+                throw new Error();
+            }
+        } catch (error) {
+            setError500(true);
+        }
+    }
+
+    const handleRecurringArticleChange = async (article_id) => {
+        const button = document.querySelector(`#switchArticle${article_id}`);
+
+        const value = button.checked;
+
+        value ? addRecurringArticle(article_id) : removeRecurringArticle(article_id);
+    }
+
     useEffect(() => {
         requestShoppingListName();
+        requestRecurringArticles();
     }, []);
 
     const content = (
@@ -140,27 +196,35 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
                                     <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
                                         <thead>
                                             <tr>
-                                                <th>Name</th>
                                                 <th>Remove from the list</th>
+                                                <th>Name</th>
+                                                <th>Recurring</th>
                                             </tr>
                                         </thead>
                                         <tfoot>
                                             <tr>
-                                                <th>Name</th>
                                                 <th>Remove from the list</th>
+                                                <th>Name</th>
+                                                <th>Recurring</th>
                                             </tr>
                                         </tfoot>
                                         <tbody>
                                             
                                             { articles && articles.map((article, index) => (
                                                 <tr key={index}>
-                                                    <td>{article.name}</td>
                                                     <td>
                                                         <a href="#" className="btn btn-danger btn-icon-split" onClick={() => removeArticle(article.id)} >
                                                             <span className="icon text-white-50">
                                                                 <i className="fas fa-trash"></i>
                                                             </span>
                                                         </a>
+                                                    </td>
+                                                    <td>{article.name}</td>
+                                                    <td>
+                                                        <div className="custom-control custom-switch">
+                                                            <input type="checkbox" className="custom-control-input" id={`switchArticle${article.id}`} defaultChecked={recurringArticlesId.includes(article.id)} onChange={() => handleRecurringArticleChange(article.id)} />
+                                                            <label className="custom-control-label" htmlFor={`switchArticle${article.id}`}></label>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             ))}
