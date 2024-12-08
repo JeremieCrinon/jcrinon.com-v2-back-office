@@ -5,6 +5,7 @@ import { requestWithoutBodyWithJWT, baseAdmin, requestWithBodyWithJWT } from '..
 import config from '../../config.json';
 
 import AddArticle from '../../components/ShoppingLists/AddArticle/AddArticle';
+import InviteUsers from '../../components/ShoppingLists/InviteUsers/InviteUsers';
 
 function DetailShoppingList({token, setError500, setFlashMessage, setToken, setUserRoles, userRoles}){
 
@@ -21,6 +22,7 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
     const [recurringArticlesId, setRecurringArticlesId] = useState([]);
 
     const [permission, setPermission] = useState(true);
+    const [isProprietary, setIsProprietary] = useState(false);
     
     async function requestShoppingListName() {
         try{
@@ -45,6 +47,7 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
             data.forEach(e => {
                 if (e.id === id) {
                     setShoppingListName(e.name);
+                    setIsProprietary(true);
                     hasFound = true;
                 }
             });
@@ -53,6 +56,7 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
                 if (e.id === id) {
                     setShoppingListName(e.name);
                     setPermission(e.permission);
+                    setIsProprietary(false);
                     hasFound = true;
                 }
             });
@@ -199,13 +203,21 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
                 <div id="content">
                     <div className="container-fluid">
                         {/* Page Heading */}
-                            <h1 className="h3 mb-2 text-gray-800">{shoppingListName}</h1>
-                            <p className="">Here, you can view the content of the shopping list, add articles to it, remove articles, check the articles you bought and when you finished shopping, you can click the button to reset the shopping list.</p>
-
-                            <div className="card shadow mb-4">
-                                <div className="card-header py-3">
-                                    <h6 className="m-0 font-weight-bold text-primary">Articles</h6>
-                                </div>
+                        <h1 className="h3 mb-2 text-gray-800">{shoppingListName}</h1>
+                        <p className="">Here, you can view the content of the shopping list, add articles to it, remove articles, check the articles you bought and when you finished shopping, you can click the button to reset the shopping list.</p>
+                        {/* Button trigger modal add to shopping list */}
+                        {isProprietary && (
+                            <button type='button' className="btn btn-primary btn-icon-split mb-4" data-toggle="modal" data-target="#inviteUsersModal">
+                                <span className="icon text-white-50">
+                                    <i className="fas fa-plus-square"></i>
+                                </span>
+                                <span className="text">Invite users to {shoppingListName}</span>
+                            </button>
+                        )}
+                        <div className="card shadow mb-4">
+                            <div className="card-header py-3">
+                                <h6 className="m-0 font-weight-bold text-primary">Articles</h6>
+                            </div>
                             <div className="card-body">
 
                                 {/* Modal reset shopping list */}
@@ -230,6 +242,7 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
                                 </div>
 
                                 {permission && <AddArticle token={token} setError500={setError500} setFlashMessage={setFlashMessage} shoppingListContent={articles} requestShoppingListContent={requestShoppingListContent} />}
+                                {isProprietary && <InviteUsers token={token} setError500={setError500} setFlashMessage={setFlashMessage} />}
 
                                 {/* User error message */}
                                 {error && <div className="alert alert-danger mt-3">{error}</div>}
