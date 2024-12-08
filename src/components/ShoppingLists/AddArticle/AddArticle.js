@@ -6,6 +6,7 @@ import { requestWithBodyWithJWT, requestWithoutBodyWithJWT } from '../../../util
 import config from '../../../config.json';
 
 import CreateArticle from './CreateArticle/CreateArticle';
+import CategorizeArticle from './CategorizeArticle/CategorizeArticle';
 
 function AddArticle({token, setError500, setFlashMessage, shoppingListContent, requestShoppingListContent}){
 
@@ -19,6 +20,8 @@ function AddArticle({token, setError500, setFlashMessage, shoppingListContent, r
     const [filteredArticles, setFilteredArticles] = useState([]);
     const [articleCategory, setArticleCategory] = useState([]);
     const [noCategoryArticles, setNoCategoryArticles] = useState([]);
+
+    const [articleToCategorize, setArticleToCategorize] = useState(null);
 
     const requestArticles = async () => {
         try {
@@ -70,6 +73,20 @@ function AddArticle({token, setError500, setFlashMessage, shoppingListContent, r
         setNoCategoryArticles(Object.values(noCategoryArticles));
       };
     
+      const deleteArticle = async (id) => {
+        try {
+            const response = await requestWithoutBodyWithJWT(`${config.apiUrl}/api/shopping-list/article/${id}/delete`, token)
+
+            if (response === 500 || response === 401 || response === 403 || response === 404) {
+                throw new Error();
+            }
+
+            requestArticles();
+            requestShoppingListContent();
+        } catch (error) {
+            setError500(true);
+        }
+      }
 
     const addArticle = async (articleId) => {
         try {
@@ -112,7 +129,10 @@ function AddArticle({token, setError500, setFlashMessage, shoppingListContent, r
                 {createArticle && (
                     <CreateArticle token={token} setError500={setError500} setFlashMessage={setFlashMessage} setCreateArticle={setCreateArticle} requestShoppingListContent={requestShoppingListContent} />
                 )}
-                {!createArticle && (
+                {!createArticle && articleToCategorize !== null && (   
+                    <CategorizeArticle token={token} setError500={setError500} setFlashMessage={setFlashMessage} articleToCategorizeId={articleToCategorize} setArticleToCategorizeId={setArticleToCategorize} requestArticles={requestArticles} />
+                )}
+                {!createArticle && articleToCategorize === null && (
                     
                     <div className="modal-content">
                         <div className="modal-header">
@@ -137,12 +157,16 @@ function AddArticle({token, setError500, setFlashMessage, shoppingListContent, r
                                         <tr>
                                             <th>Add to the list</th>
                                             <th>Name</th>
+                                            <th>Categorize</th>
+                                            <th>Delete the article</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
                                             <th>Add to the list</th>
                                             <th>Name</th>
+                                            <th>Categorize</th>
+                                            <th>Delete the article</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -159,6 +183,20 @@ function AddArticle({token, setError500, setFlashMessage, shoppingListContent, r
                                                         </a> 
                                                     </td>
                                                     <td>{article.name}</td>
+                                                    <td>
+                                                        <a href="#" className="btn btn-secondary btn-icon-split" onClick={() => setArticleToCategorize(article.id)} >
+                                                            <span className="icon text-white-50">
+                                                                <i className="fas fa-th-large"></i>
+                                                            </span>
+                                                        </a> 
+                                                    </td>
+                                                    <td>
+                                                        <a href="#" className="btn btn-danger btn-icon-split" onClick={() => deleteArticle(article.id)} >
+                                                            <span className="icon text-white-50">
+                                                                <i className="fas fa-trash"></i>
+                                                            </span>
+                                                        </a> 
+                                                    </td>
                                                 </tr>
                                             ))}
                                             </>
@@ -174,6 +212,20 @@ function AddArticle({token, setError500, setFlashMessage, shoppingListContent, r
                                                     </a> 
                                                 </td>
                                                 <td>{article.name}</td>
+                                                <td>
+                                                    <a href="#" className="btn btn-secondary btn-icon-split" onClick={() => setArticleToCategorize(article.id)} >
+                                                        <span className="icon text-white-50">
+                                                            <i className="fas fa-th-large"></i>
+                                                        </span>
+                                                    </a> 
+                                                </td>
+                                                <td>
+                                                    <a href="#" className="btn btn-danger btn-icon-split" onClick={() => deleteArticle(article.id)} >
+                                                        <span className="icon text-white-50">
+                                                            <i className="fas fa-trash"></i>
+                                                        </span>
+                                                    </a> 
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
