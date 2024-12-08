@@ -153,6 +153,20 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
         value ? addRecurringArticle(article_id) : removeRecurringArticle(article_id);
     }
 
+    const resetList = async () => {
+        try {
+            const response = await requestWithBodyWithJWT(`${config.apiUrl}/api/shopping-list/shopping-list-article/reset`, {shopping_list_id: id}, token);
+
+            if(response === 401 || response === 403 || response === 404 || response === 500){
+                throw new Error();
+            }
+
+            requestShoppingListContent();
+        } catch (response) {
+            setError500(true);
+        }
+    }
+
     useEffect(() => {
         requestShoppingListName();
         requestRecurringArticles();
@@ -168,12 +182,32 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
                             <h1 className="h3 mb-2 text-gray-800">{shoppingListName}</h1>
                             <p className="">Here, you can view the content of the shopping list, add articles to it, remove articles, check the articles you bought and when you finished shopping, you can click the button to reset the shopping list.</p>
 
-                           
                             <div className="card shadow mb-4">
                                 <div className="card-header py-3">
                                     <h6 className="m-0 font-weight-bold text-primary">Articles</h6>
                                 </div>
                             <div className="card-body">
+
+                                {/* Modal reset shopping list */}
+                                <div className="modal fade" id="resetShoppingListModal" tabIndex="-1" role="dialog" aria-hidden="true">
+                                    <div className="modal-dialog" role="document">
+                                        <div className="modal-content">
+                                        <div className="modal-header">
+                                            <h5 className="modal-title" id="deleteShoppingListModalLabel">Confirm you finished shopping</h5>
+                                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div className="modal-body">
+                                            <p>All non-recurring articles will be deleted.</p>
+                                        </div>
+                                        <div className="modal-footer">
+                                            <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={resetList}>Confirm</button>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 {permission && <AddArticle token={token} setError500={setError500} setFlashMessage={setFlashMessage} shoppingListContent={articles} requestShoppingListContent={requestShoppingListContent} />}
 
@@ -196,41 +230,49 @@ function DetailShoppingList({token, setError500, setFlashMessage, setToken, setU
                                     <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
                                         <thead>
                                             <tr>
-                                                <th>Remove from the list</th>
                                                 <th>Name</th>
                                                 <th>Recurring</th>
+                                                <th>Remove from the list</th>
                                             </tr>
                                         </thead>
                                         <tfoot>
                                             <tr>
-                                                <th>Remove from the list</th>
                                                 <th>Name</th>
                                                 <th>Recurring</th>
+                                                <th>Remove from the list</th>
                                             </tr>
                                         </tfoot>
                                         <tbody>
                                             
                                             { articles && articles.map((article, index) => (
                                                 <tr key={index}>
-                                                    <td>
-                                                        <a href="#" className="btn btn-danger btn-icon-split" onClick={() => removeArticle(article.id)} >
-                                                            <span className="icon text-white-50">
-                                                                <i className="fas fa-trash"></i>
-                                                            </span>
-                                                        </a>
-                                                    </td>
                                                     <td>{article.name}</td>
                                                     <td>
                                                         <div className="custom-control custom-switch">
-                                                            <input type="checkbox" className="custom-control-input" id={`switchArticle${article.id}`} defaultChecked={recurringArticlesId.includes(article.id)} onChange={() => handleRecurringArticleChange(article.id)} />
+                                                            <input type="checkbox" className="custom-control-input" id={`switchArticle${article.id}`} defaultChecked={recurringArticlesId.includes(article.id)} onChange={() => handleRecurringArticleChange(article.id)} disabled={!permission} />
                                                             <label className="custom-control-label" htmlFor={`switchArticle${article.id}`}></label>
                                                         </div>
+                                                    </td>
+                                                    <td>
+                                                        <button href="#" className="btn btn-danger btn-icon-split" onClick={() => removeArticle(article.id)} disabled={!permission} >
+                                                            <span className="icon text-white-50">
+                                                                <i className="fas fa-trash"></i>
+                                                            </span>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             ))}
                                         </tbody>
                                     </table>
                                 </div>
+                                {permission && (
+                                    <button type="button" className="btn btn-primary btn-icon-split mb-4" data-toggle="modal" data-target="#resetShoppingListModal">
+                                        <span className="icon text-white-50">
+                                            <i className="fas fa-plus-square"></i>
+                                        </span>
+                                        <span className="text">I finished shopping</span>
+                                    </button>
+                                )}
                             </div>              
                         </div>
                     </div>

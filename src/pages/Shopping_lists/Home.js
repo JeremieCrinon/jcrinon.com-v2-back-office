@@ -227,20 +227,20 @@ function HomeShoppingList({token, setError500, setFlashMessage, setToken, setUse
 
                                 {/* Modal delete shopping list */}
                                 <div className="modal fade" id="deleteShoppingListModal" tabIndex="-1" role="dialog" aria-hidden="true">
-                                <div className="modal-dialog" role="document">
-                                    <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h5 className="modal-title" id="deleteShoppingListModalLabel">Confirm shopping list deletion</h5>
-                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>
+                                    <div className="modal-dialog" role="document">
+                                        <div className="modal-content">
+                                        <div className="modal-header">
+                                            <h5 className="modal-title" id="deleteShoppingListModalLabel">Confirm shopping list deletion</h5>
+                                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div className="modal-footer">
+                                            <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={deleteShoppingList}>Confirm</button>
+                                        </div>
+                                        </div>
                                     </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                        <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={deleteShoppingList}>Confirm</button>
-                                    </div>
-                                    </div>
-                                </div>
                                 </div>
                                 {/* Button trigger modal create shopping list */}
                                 <button type="button" className="btn btn-primary btn-icon-split mb-4" data-toggle="modal" data-target="#createShoppingListModal">
@@ -314,14 +314,12 @@ function HomeShoppingList({token, setError500, setFlashMessage, setToken, setUse
                                             <tr>
                                                 <th>Name</th>
                                                 <th>View shopping list</th>
-                                                <th>Edit the name</th>
                                             </tr>
                                         </thead>
                                         <tfoot>
                                             <tr>
                                                 <th>Name</th>
                                                 <th>View shopping list</th>
-                                                <th>Edit the name</th>
                                             </tr>
                                         </tfoot>
                                         <tbody>
@@ -336,25 +334,6 @@ function HomeShoppingList({token, setError500, setFlashMessage, setToken, setUse
                                                             </span>
                                                             <span className="text">View the list</span>
                                                         </Link>
-                                                    </td>
-                                                    <td>
-                                                        {shoppingList.permission && (
-                                                            <a href="#" className="btn btn-secondary btn-icon-split" data-toggle="modal" data-target="#editShoppingListModal" onClick={() => {setEditShoppingListId(shoppingList.id); setEditShoppingListName(shoppingList.name)}} >
-                                                                <span className="icon text-white-50">
-                                                                    <i className="fas fa-arrow-right"></i>
-                                                                </span>
-                                                                <span className="text">Edit the name</span>
-                                                            </a> 
-                                                        )}
-                                                        {!shoppingList.permission && (
-                                                            <a href="#" className="btn btn-light btn-icon-split">
-                                                                <span className="icon text-white-50">
-                                                                    <i className="fas fa-lock"></i>
-                                                                </span>
-                                                                <span className="text">Edit the name</span>
-                                                            </a> 
-                                                        )}
-                                                        
                                                     </td>
                                                 </tr>
                                             ))}
