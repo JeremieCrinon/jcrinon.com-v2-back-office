@@ -62,6 +62,18 @@
       "logout": "Déconnexion"
     },
 
+    "notFound": {
+      "errorName": "Page non trouvée",
+      "errorDescription": "Et si vous retourniez à l'accueil, vous y serez mieux qu'ici...",
+      "link": "Retour à l'accueil"
+    },
+
+    "serverError": {
+      "errorName": "Erreur serveur",
+      "errorDescription": "Oh oh, se n'était pas sensé arriver... vous pouvez réessayer plus tard, me contacter ou essayer de retourner à l'accueil via le lien si dessous.",
+      "link": "Retour à l'accueil"
+    },
+
     "dashboard": {
       "title": "Accueil",
       "whatCanDoTitle": "Que puis-je faire ici",

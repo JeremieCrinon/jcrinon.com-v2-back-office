@@ -62,6 +62,18 @@
       "logout": "Logout"
     },
 
+    "notFound": {
+      "errorName": "Page not found",
+      "errorDescription": "It looks like you found a glitch in the matrix...",
+      "link": "Back to home"
+    },
+
+    "serverError": {
+      "errorName": "Internal server error",
+      "errorDescription": "Oh oh, that's not supposed to append, you can try again later, or contact me.... You can try to go back to the home using the link bellow.",
+      "link": "Back to home"
+    },
+
     "dashboard": {
       "title": "Home",
       "whatCanDoTitle": "What can you do here",
