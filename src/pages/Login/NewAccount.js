@@ -3,11 +3,15 @@ import { requestWithBodyWithJWT } from '../../utils';
 
 import config from '../../config.json';
 
+import { useTranslation } from 'react-i18next';
+
 function NewAccount({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEmail, userEmail, token, setFlashMessage, setError500}){
   const [email, setEmail] = useState(userEmail);
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [error, setError] = useState('');
+
+  const { t } = useTranslation();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -34,7 +38,7 @@ function NewAccount({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEma
 
       const data = await response.json();
 
-      setFlashMessage("Your account has been modified, please log in with the new credentials you provided.")
+      setFlashMessage(t('newAccount.flashMessage'))
 
       setUserRoles(null);
       setIsNewAccount(null);
@@ -43,13 +47,13 @@ function NewAccount({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEma
 
     } catch (error) {
       if(error.message  ===  "passwd not matching"){
-        setError("Please enter the same password!")
+        setError(t('newAccount.noSamePasswd'))
       } else if(error.message  ===  "no email"){
-        setError("Please enter an email");
+        setError(t('newAccount.noEmail'));
       } else if (error.message  ===  "no passwd"){
-        setError("Please enter a password");
+        setError(t('newAccount.noPasswd'));
       } else {
-        setError('Modifying account failed. Please check your infos and try again.');
+        setError(t('newAccount.failed'));
       }
     }
   };
@@ -65,7 +69,7 @@ function NewAccount({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEma
                 <div className="col-lg-6">
                   <div className="p-5">
                     <div className="text-center">
-                      <h1 className="h4 text-gray-900 mb-4">Modify your infos !</h1>
+                      <h1 className="h4 text-gray-900 mb-4">{t('newAccount.title')}</h1>
                     </div>
                     <form className="user" onSubmit={handleSubmit}>
                       <div className="form-group">
@@ -74,7 +78,7 @@ function NewAccount({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEma
                           className="form-control form-control-user"
                           id="exampleInputEmail"
                           aria-describedby="emailHelp"
-                          placeholder="Enter Email Address..."
+                          placeholder={t('newAccount.emailInput')}
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                         />
@@ -82,19 +86,19 @@ function NewAccount({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEma
                       <div className="form-group row">
                             <div className="col-sm-6 mb-3 mb-sm-0">
                                 <input type="password" className="form-control form-control-user"
-                                    id="exampleInputPassword" placeholder="New password" value={password}
+                                    id="exampleInputPassword" placeholder={t('newAccount.newPasswdInput')} value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                    />
                             </div>
                             <div className="col-sm-6">
                                 <input type="password" className="form-control form-control-user"
-                                    id="exampleRepeatPassword" placeholder="Repeat Password" value={passwordConfirm}
+                                    id="exampleRepeatPassword" placeholder={t('newAccount.newPasswdConfirmInput')} value={passwordConfirm}
                                     onChange={(e) => setPasswordConfirm(e.target.value)}
                                     />
                             </div>
                       </div>
                       <button type="submit" className="btn btn-primary btn-user btn-block">
-                        Validate
+                        {t('newAccount.valideButton')}
                       </button>
                     </form>
                     {error && <div className="alert alert-danger mt-3">{error}</div>}

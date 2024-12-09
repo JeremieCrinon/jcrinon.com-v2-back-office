@@ -4,6 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import config from '../../config.json';
 
+import { useTranslation } from 'react-i18next';
+
 function ResetPassword({setError500, setFlashMessage}){
   const [error, setError] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -11,6 +13,8 @@ function ResetPassword({setError500, setFlashMessage}){
 
   const navigate = useNavigate();
   const { code } = useParams();
+
+  const { t } = useTranslation();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -37,16 +41,16 @@ function ResetPassword({setError500, setFlashMessage}){
 
         const data = await response.json();
 
-        setFlashMessage('The password as successfully been changed, you can login with it!');
+        setFlashMessage(t('resetPasswd.flashMessage'));
         navigate("/login");
 
       } catch(error) {
         if(error.message === "no same passwords"){
-          setError("The password and password confirmation does not match.");
+          setError(t('resetPasswd.noSamePasswd'));
         } else if (error.message === "no password") {
-          setError("Please enter a new password");
+          setError(t('resetPasswd.noPasswd'));
         } else {
-            setError('Changing password failed. Please verify that you did not modified the link, and try again.');
+            setError(t('resetPasswd.failed'));
         }
       }
 
@@ -63,7 +67,7 @@ function ResetPassword({setError500, setFlashMessage}){
                 <div className="col-lg-6">
                   <div className="p-5">
                     <div className="text-center">
-                      <h1 className="h4 text-gray-900 mb-4">Change you're password.</h1>
+                      <h1 className="h4 text-gray-900 mb-4">{t('resetPasswd.title')}</h1>
                     </div>
                      
                     <form className="user" onSubmit={handleSubmit}>
@@ -71,7 +75,7 @@ function ResetPassword({setError500, setFlashMessage}){
                           <input
                               type="password"
                               className="form-control form-control-user"
-                              placeholder="Enter you're new password..."
+                              placeholder={t('resetPasswd.newPasswdInput')}
                               onChange={(e) => setNewPassword(e.target.value)}
                               value={newPassword}
                           />
@@ -80,13 +84,13 @@ function ResetPassword({setError500, setFlashMessage}){
                           <input
                               type="password"
                               className="form-control form-control-user"
-                              placeholder="Confirm password..."
+                              placeholder={t('resetPasswd.newPasswdConfirmInput')}
                               onChange={(e) => setNewPasswordConfirm(e.target.value)}
                               value={newPasswordConfirm}
                           />
                         </div>
                         <button type="submit" className="btn btn-primary btn-user btn-block">
-                        Reset the password
+                          {t('resetPasswd.resetPasswdButton')}
                         </button>
                     </form>
                     {error && <div className="alert alert-danger mt-3">{error}</div>}

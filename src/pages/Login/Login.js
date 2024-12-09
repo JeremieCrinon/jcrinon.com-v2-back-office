@@ -5,6 +5,7 @@ import { requestWithBodyWithoutJWT, requestWithoutBodyWithJWT } from '../../util
 
 import config from '../../config.json';
 
+import { useTranslation } from 'react-i18next';
 
 function Login({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEmail, setUserEmail, setError500, setFlashMessage}){
   const [email, setEmail] = useState('');
@@ -12,6 +13,8 @@ function Login({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEmail, s
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -56,9 +59,11 @@ function Login({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEmail, s
 
       } catch(error) {
         if(error.message === "no email or passwd"){
-          setError('Please enter an email and password');
+          setError(t('login.noPasswd'));
+          // setError('Please enter an email and password');
         } else{
-          setError('Login failed. Please check your credentials and try again.');
+          setError(t('login.failed'));
+          // setError('Login failed. Please check your credentials and try again.');
         }
         
       }
@@ -76,7 +81,7 @@ function Login({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEmail, s
                 <div className="col-lg-6">
                   <div className="p-5">
                     <div className="text-center">
-                      <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                      <h1 className="h4 text-gray-900 mb-4">{t('login.title')}</h1>
                     </div>
                       <form className="user" onSubmit={handleSubmit}>
                         <div className="form-group">
@@ -85,7 +90,7 @@ function Login({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEmail, s
                             className="form-control form-control-user"
                             id="exampleInputEmail"
                             aria-describedby="emailHelp"
-                            placeholder="Enter Email Address..."
+                            placeholder={t('login.emailInput')}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                           />
@@ -95,19 +100,19 @@ function Login({setToken, setUserRoles, setIsNewAccount, setIsUnverifiedEmail, s
                             type="password"
                             className="form-control form-control-user"
                             id="exampleInputPassword"
-                            placeholder="Password"
+                            placeholder={t('login.passwdInput')}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                           />
                         </div>
                         <button type="submit" className="btn btn-primary btn-user btn-block">
-                          Login
+                          {t('login.loginButton')}
                         </button>
                       </form>
                       {error && <div className="alert alert-danger mt-3">{error}</div>}
                       <hr />
                       <div className="text-center">
-                        <Link to={"/forgot/password"} className="small">Forgot Password?</Link>
+                        <Link to={"/forgot/password"} className="small">{t('login.forgotPasswdButton')}</Link>
                       </div>
                   </div>
                 </div>

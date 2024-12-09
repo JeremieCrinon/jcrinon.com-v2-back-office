@@ -4,11 +4,15 @@ import { useNavigate } from 'react-router-dom';
 
 import config from '../../config.json';
 
+import { useTranslation } from 'react-i18next';
+
 function VerifyEmail({setIsUnverifiedEmail, token, setFlashMessage, setError500}){
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -29,15 +33,15 @@ function VerifyEmail({setIsUnverifiedEmail, token, setFlashMessage, setError500}
         setError500(true);
       }
 
-      setFlashMessage("Email successfully verified !")
+      setFlashMessage(t('verifyEmail.flashMessage'))
       setIsUnverifiedEmail(false);
       navigate('/');
 
     } catch (error) {
       if(error.message === "no code"){
-        setError('Please enter the code sent by email.');
+        setError(t('verifyEmail.noCode'));
       } else {
-        setError('Email verification failed, please verify the code and try again.');
+        setError(t('verifyEmail.failed'));
       }
     }
   };
@@ -53,19 +57,19 @@ function VerifyEmail({setIsUnverifiedEmail, token, setFlashMessage, setError500}
                 <div className="col-lg-6">
                   <div className="p-5">
                     <div className="text-center">
-                      <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                      <h1 className="h4 text-gray-900 mb-4">{t('verifyEmail.title')}</h1>
                     </div>
                     <form className="user" onSubmit={handleSubmit}>
                       <div className="form-group">
                         <input
                           type="text"
                           className="form-control form-control-user"
-                          placeholder="Enter the code sent by mail"
+                          placeholder={t('verifyEmail.codeInput')}
                           onChange={(e) => setCode(e.target.value)}
                         />
                       </div>
                       <button type="submit" className="btn btn-primary btn-user btn-block">
-                        Verify Email
+                        {t('verifyEmail.validateButton')}
                       </button>
                     </form>
                     {error && <div className="alert alert-danger mt-3">{error}</div>}

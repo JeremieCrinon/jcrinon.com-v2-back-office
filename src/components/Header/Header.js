@@ -1,8 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
+import { useTranslation } from 'react-i18next';
+
 function Header({userRoles}){  
     const location = useLocation();
+
+    const { t } = useTranslation();
 
     return(
       <>
@@ -24,7 +28,7 @@ function Header({userRoles}){
                 >
                     <>
                       <i className="fas fa-fw fa-home"></i>
-                      <span>Home</span>
+                      <span>{t('header.home')}</span>
                     </>
                     
                 </Link>
@@ -38,7 +42,7 @@ function Header({userRoles}){
                     >
                         <>
                         <i className="fas fa-fw fa-project-diagram"></i>
-                        <span>Projects</span>
+                        <span>{t('header.projects')}</span>
                         </>
                         
                     </Link>
@@ -52,7 +56,7 @@ function Header({userRoles}){
                     >
                         <>
                         <i className="fas fa-fw fa-user"></i>
-                        <span>Users</span>
+                        <span>{t('header.users')}</span>
                         </>
                         
                     </Link>
@@ -67,7 +71,7 @@ function Header({userRoles}){
                     >
                         <>
                         <i className="fas fa-fw fa-list"></i>
-                        <span>Shopping lists</span>
+                        <span>{t('header.shoppingLists')}</span>
                         </>
                         
                     </Link>

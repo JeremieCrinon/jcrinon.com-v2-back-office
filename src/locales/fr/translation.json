@@ -1,16 +1,65 @@
 {
-    "header": {
-      "home": "Accueil",
-      "about": "À propos",
-      "portfolio": "Portfolio",
-      "contact": "Contact"
+    "login": {
+      "noPasswd": "Merci d'entrer un email et mot de passe.",
+      "failed": "Connexion échouée, veuillez vérifier votre email et mot de passe et réessayer.",
+      "title": "Bienvenue !",
+      "emailInput": "Adresse email...",
+      "passwdInput": "Mot de passe...",
+      "loginButton": "Se connecter",
+      "forgotPasswdButton": "Mot de passe oublié...."
     },
 
-    "home": {
-      "text": "Actuellement en formation professionnelle DWWM (Développeur Web et Web Mobile) jusqu'au 4 octobre 2024, l'apprentissage et la mise en pratique en entreprise sont terminés, il reste la préparation et le passage du titre.",
-      "poo": "Programmation orienté objet",
-      "mvc": "Modèle vue contrôleur",
-      "skills": "Compétences"
+    "forgotPasswd": {
+      "flashMessage": "Un email avec un lien pour réinitialiser le mot de passe a été envoyé à l'utilisateur si il existe.",
+      "noEmail": "Merci d'entrer votre email.",
+      "failed": "Réinitialisation du mot de passe échouée, vérifiez votre adresse e-mail et réessayez.",
+      "title": "Mot de passe oublié ?",
+      "emailInput": "Adresse email...",
+      "resetPasswdButton": "Envoyer un email de réinitialisation de mot de passe."
+    },
+
+    "resetPasswd": {
+      "flashMessage": "Le mot de passe a bien été changé, vous pouvez maintenant vous connecter avec!",
+      "noSamePasswd": "Le mot de passe et la confirmation du mot de passe ne correspondent pas.",
+      "noPasswd": "Entrez un nouveau mot de passe.",
+      "failed": "Modification du mot de passe échouée, vérifiez que vous n'avez pas modifié le lien et réessayez.",
+      "title": "Changer de mot de passe.",
+      "newPasswdInput": "Nouveau mot de passe...",
+      "newPasswdConfirmInput": "Confirmez le nouveau mot de passe...",
+      "resetPasswdButton": "Changer le mot de passe"
+    },
+
+    "newAccount": {
+      "flashMessage": "Votre compte a bien été modifié, veuillez vous connecter avec les nouveaux identifiants que vous avez entré.",
+      "noSamePasswd": "Le mot de passe et la confirmation du mot de passe ne correspondent pas.",
+      "noEmail": "Merci d'entrer votre email.",
+      "noPasswd": "Merci d'entrer un mot de passe.",
+      "failed": "La modification de votre compte a échouée. Vérifiez vos informations et réessayez.",
+      "title": "Modifiez vos informations",
+      "emailInput": "Adresse email...",
+      "newPasswdInput": "Nouveau mot de passe...",
+      "newPasswdConfirmInput": "Confirmez le nouveau mot de passe...",
+      "valideButton": "Valider"
+    },
+
+    "verifyEmail": {
+      "flashMessage": "Email vérifié avec success !",
+      "noCode": "Merci d'entrer le code qui vous a été envoyé par e-mail.",
+      "failed": "Verification de l'e-mail échouée, vérifiez le code et réessayez.",
+      "title": "Bienvenue !",
+      "codeInput": "Entrez le code envoyé par e-mail",
+      "validateButton": "Vérifier l'e-mail"
+    },
+
+    "header": {
+      "home": "Accueil",
+      "projects": "Projets",
+      "users": "Utilisateurs",
+      "shoppingLists": "Listes de courses"
+    },
+
+    "topBar": {
+      "logout": "Déconnexion"
     }
   }
   

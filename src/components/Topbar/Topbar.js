@@ -1,7 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 
+import { useTranslation } from 'react-i18next';
+
 function Topbar({setToken, setUserRoles}) {
+
+    const { t } = useTranslation();
+
     function logout(){
         setUserRoles(null);
         setToken(null);
@@ -35,7 +40,7 @@ function Topbar({setToken, setUserRoles}) {
                         </a> */}
                         <a className="dropdown-item" onClick={logout}>
                             <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Logout
+                            {t('topBar.logout')}
                         </a>
                     </div>
                 </li>

@@ -4,11 +4,15 @@ import { useNavigate } from 'react-router-dom';
 
 import config from '../../config.json';
 
+import { useTranslation } from 'react-i18next';
+
 function ForgotPassword({setError500, setFlashMessage}){
   const [error, setError] = useState('');
   const [recoverEmail, setRecoverEmail] = useState('');
 
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -31,14 +35,14 @@ function ForgotPassword({setError500, setFlashMessage}){
 
         const data = await response.json();
 
-        setFlashMessage('An email with a link to recover your password has been sent to the user\'s email is he exists.');
+        setFlashMessage(t('forgotPasswd.flashMessage'));
         navigate("/login");
 
       } catch(error) {
         if(error.message === "no email"){
-          setError('Please enter you\'re email!');
+          setError(t('forgotPasswd.noEmail'));
         } else {
-          setError('Changing password failed. Please check the email and try again.');
+          setError(t('forgotPasswd.failed'));
         }
       }
 
@@ -55,7 +59,7 @@ function ForgotPassword({setError500, setFlashMessage}){
                 <div className="col-lg-6">
                   <div className="p-5">
                     <div className="text-center">
-                      <h1 className="h4 text-gray-900 mb-4">Forgot you're password ?</h1>
+                      <h1 className="h4 text-gray-900 mb-4">{t('forgotPasswd.title')}</h1>
                     </div>
                      
                     <form className="user" onSubmit={handleSubmit}>
@@ -65,13 +69,13 @@ function ForgotPassword({setError500, setFlashMessage}){
                             className="form-control form-control-user"
                             id="exampleInputEmail"
                             aria-describedby="emailHelp"
-                            placeholder="Enter Email Address..."
+                            placeholder={t('forgotPasswd.emailInput')}
                             onChange={(e) => setRecoverEmail(e.target.value)}
                             value={recoverEmail}
                         />
                         </div>
                         <button type="submit" className="btn btn-primary btn-user btn-block">
-                        Send a reset password e-mail
+                          {t('forgotPasswd.resetPasswdButton')}
                         </button>
                     </form>
                     {error && <div className="alert alert-danger mt-3">{error}</div>}

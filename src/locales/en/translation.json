@@ -1,16 +1,65 @@
 {
-    "header": {
-      "home": "Home",
-      "about": "About",
-      "portfolio": "Portfolio",
-      "contact": "Contact"
+    "login": {
+      "noPasswd": "Please enter an email and password.",
+      "failed": "Login failed. Please check your credentials and try again.",
+      "title": "Welcome Back!",
+      "emailInput": "Enter Email Address...",
+      "passwdInput": "Password",
+      "loginButton": "Login",
+      "forgotPasswdButton": "Forgot Password...."
     },
 
-    "home": {
-      "text": "Currently in DWWM (Développeur Web et Web Mobile - Web and Mobile Web Developer) training until October 4th, 2024. The learning and practice in the enterprise through an internship is finished; only the preparation and the final exam remain.",
-      "poo": "Object-oriented programming",
-      "mvc": "Model-view-controller",
-      "skills": "Skills"
+    "forgotPasswd": {
+      "flashMessage": "An email with a link to recover the password has been sent to the user's email is he exists.",
+      "noEmail": "Please enter your email.",
+      "failed": "Reseting password failed. Please check the email and try again.",
+      "title": "Forgot your password ?",
+      "emailInput": "Enter Email Address...",
+      "resetPasswdButton": "Send a reset password e-mail"
+    },
+
+    "resetPasswd": {
+      "flashMessage": "The password as successfully been changed, you can login with it!",
+      "noSamePasswd": "The password and the password confirmation does not match.",
+      "noPasswd": "Please enter a new passord.",
+      "failed": "Changing password failed. Please verify that you did not modify the link, and try again.",
+      "title": "Change your password.",
+      "newPasswdInput": "Enter your new password...",
+      "newPasswdConfirmInput": "Confirm password...",
+      "resetPasswdButton": "Reset the password"
+    },
+
+    "newAccount": {
+      "flashMessage": "Your account has been modified, please log in with the new credentials you provided.",
+      "noSamePasswd": "The password and the password confirmation does not match.",
+      "noEmail": "Please enter your email.",
+      "noPasswd": "Please enter a new passord.",
+      "failed": "Modifying account failed. Please check your infos and try again.",
+      "title": "Modify your infos.",
+      "emailInput": "Enter Email Address...",
+      "newPasswdInput": "Enter your new password...",
+      "newPasswdConfirmInput": "Confirm password...",
+      "valideButton": "Validate"
+    },
+
+    "verifyEmail": {
+      "flashMessage": "Email successfully verified !",
+      "noCode": "Please enter the code sent by e-mail.",
+      "failed": "Email verification failed, please verify the code and try again.",
+      "title": "Welcome Back!",
+      "codeInput": "Enter the code sent by email",
+      "validateButton": "Verify Email"
+    },
+
+    "header": {
+      "home": "Home",
+      "projects": "Projects",
+      "users": "Users",
+      "shoppingLists": "Shopping lists"
+    },
+
+    "topBar": {
+      "logout": "Logout"
     }
   }
   
