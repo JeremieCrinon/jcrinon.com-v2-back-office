@@ -60,6 +60,15 @@
 
     "topBar": {
       "logout": "Logout"
+    },
+
+    "dashboard": {
+      "title": "Home",
+      "whatCanDoTitle": "What can you do here",
+      "whatCanDoText": "Depending on the permission that have been gave to you, you can do a lot of different things, the person who has created your account certainly told you what you have the permission to do.",
+      "contactMeTitle": "Contact me",
+      "contactMeText": "If you find a bug, have a problem, or any question, you can contact me. You certainly already have a contact method, but if you don't, here is my contact informations :",
+      "contactMePhoneNumber": "phone number"
     }
   }
   

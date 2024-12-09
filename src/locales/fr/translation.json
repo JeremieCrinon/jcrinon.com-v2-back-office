@@ -60,6 +60,15 @@
 
     "topBar": {
       "logout": "Déconnexion"
+    },
+
+    "dashboard": {
+      "title": "Accueil",
+      "whatCanDoTitle": "Que puis-je faire ici",
+      "whatCanDoText": "En fonction des permissions qui vous ont été donnés, vous pouvez faire plein de différentes choses, la personne qui vous a créé votre compte vous a sans doute dit se que vous pouvez faire ici.",
+      "contactMeTitle": "Me contacter",
+      "contactMeText": "Si vous trouvez un bug, avez un problème, ou juste une question, n'hésitez pas à me contacter, vous avez sans doute déjà un moyen pour me contacter, mais sinon, voici mes coordonnés :",
+      "contactMePhoneNumber": "téléphone"
     }
   }
   
