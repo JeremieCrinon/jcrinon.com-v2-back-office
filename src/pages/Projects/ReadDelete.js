@@ -4,9 +4,13 @@ import { Link } from 'react-router-dom';
 import { requestWithoutBodyWithoutJWT, requestWithoutBodyWithJWT, baseAdmin } from '../../utils';
 import config from '../../config.json';
 
+import { useTranslation } from 'react-i18next';
+
 function ReadDeleteProject({token, setError500, setFlashMessage, setToken, setUserRoles, userRoles}){
 
     const [projects, setProjects] = useState([]);
+
+    const { t } = useTranslation();
     
     async function requestProjects() {
         try{
@@ -38,7 +42,7 @@ function ReadDeleteProject({token, setError500, setFlashMessage, setToken, setUs
             } else if(response === 500){
                 setError500(true);
             } else {
-                setFlashMessage("The project as been deleted !");
+                setFlashMessage(t('projects.readDelete.deleteFlashMessage'));
                 requestProjects();
             }
         } catch{
@@ -57,35 +61,35 @@ function ReadDeleteProject({token, setError500, setFlashMessage, setToken, setUs
                 <div id="content">
                     <div className="container-fluid">
                         {/* Page Heading */}
-                            <h1 className="h3 mb-2 text-gray-800">Projects</h1>
-                            <p className="">Here, you can view , create, edit and delete the projects displayed on the website.</p>
+                            <h1 className="h3 mb-2 text-gray-800">{t('projects.readDelete.title')}</h1>
+                            <p className="">{t('projects.readDelete.subTitle')}</p>
                                 
                             <Link to={"/projects/create"} className="btn btn-primary btn-icon-split mb-4">
                                 <span className="icon text-white-50">
                                     <i className="fas fa-plus-square"></i>
                                 </span>
-                                <span className="text">Create a project</span>
+                                <span className="text">{t('projects.readDelete.linkCreate')}</span>
                             </Link>
 
                             {/* DataTales Example */}
                             <div className="card shadow mb-4">
                                 <div className="card-header py-3">
-                                    <h6 className="m-0 font-weight-bold text-primary">Projects</h6>
+                                    <h6 className="m-0 font-weight-bold text-primary">{t('projects.readDelete.tab.title')}</h6>
                                 </div>
                             <div className="card-body">
                                 <div className="table-responsive">
                                     <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
                                         <thead>
                                             <tr>
-                                                <th>Name</th>
+                                                <th>{t('projects.readDelete.tab.name')}</th>
                                                 <th>Description</th>
-                                                <th>French name</th>
-                                                <th>French description</th>
+                                                <th>{t('projects.readDelete.tab.frenchName')}</th>
+                                                <th>{t('projects.readDelete.tab.frenchDescription')}</th>
                                                 <th>Image</th>
-                                                <th>Github link</th>
-                                                <th>Project link</th>
-                                                <th>Edit</th>
-                                                <th>Delete</th>
+                                                <th>{t('projects.readDelete.tab.githubLink')}</th>
+                                                <th>{t('projects.readDelete.tab.projectLink')}</th>
+                                                <th>{t('projects.readDelete.tab.edit')}</th>
+                                                <th>{t('projects.readDelete.tab.delete')}</th>
                                             </tr>
                                         </thead>
                                         <tfoot>

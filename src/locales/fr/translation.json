@@ -81,6 +81,59 @@
       "contactMeTitle": "Me contacter",
       "contactMeText": "Si vous trouvez un bug, avez un problème, ou juste une question, n'hésitez pas à me contacter, vous avez sans doute déjà un moyen pour me contacter, mais sinon, voici mes coordonnés :",
       "contactMePhoneNumber": "téléphone"
+    },
+
+    "projects": {
+      "readDelete": {
+        "deleteFlashMessage": "Le projet a été supprimé !",
+        "title": "Projets",
+        "subTitle": "Ici, vous pouvez voir, créer, modifier et supprimer les projets affichés sur le site.",
+        "linkCreate": "Créer un projet",
+        "tab": {
+          "title": "Projets",
+          "name": "Nom",
+          "frenchName": "Nom en français",
+          "frenchDescription": "Description en français",
+          "githubLink": "Liens github",
+          "projectLink": "Lien vers le projet",
+          "edit": "Modifier",
+          "delete": "Supprimer"
+        }
+      },
+      "create": {
+        "flashMessage": "Le projet a été créé !",
+        "failed": "Création du projet échouée, vérifiez les informations que vous avez entré.e et réessayez.",
+        "badAspectRatio": "Merci d'entrer une image dans le ratio 16/9.",
+        "toSmall": "L'image doit faire au moins 768 px de large !",
+        "noMainInput": "Merci d'entrer un nom, nom en français, description et description en français.",
+        "noFile": "Merci d'entrer une image.",
+        "invalidFileFormat": "L'image doit être dans un de ces formats : (png, jpg, jpeg, webp).",
+        "form": {
+          "name": "Nom",
+          "frenchName": "Nom en français",
+          "frenchDescription": "Description en français",
+          "githubLink": "Lien vers le Github du projet (facultatif)",
+          "projectLink": "Lien vers le projet (facultatif)",
+          "createButton": "Créer le projet"
+        }
+      },
+      "edit": {
+        "flashMessage": "Le projet a été modifié !",
+        "failed": "Modification du projet échouée, vérifiez les informations que vous avez entré.e et réessayez.",
+        "badAspectRatio": "Merci d'entrer une image dans le ratio 16/9.",
+        "toSmall": "L'image doit faire au moins 768 px de large !",
+        "noMainInput": "Merci d'entrer un nom, nom en français, description et description en français.",
+        "invalidFileFormat": "L'image doit être dans un de ces formats : (png, jpg, jpeg, webp).",
+        "form": {
+          "name": "Nom",
+          "frenchName": "Nom en français",
+          "frenchDescription": "Description en français",
+          "githubLink": "Lien vers le Github du projet (facultatif)",
+          "projectLink": "Lien vers le projet (facultatif)",
+          "newImage": "Entrez une nouvelle image si vous voulez la changer.",
+          "createButton": "Modifier le projet"
+        }
+      }
     }
   }
   

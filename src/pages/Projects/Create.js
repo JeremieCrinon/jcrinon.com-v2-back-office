@@ -5,6 +5,8 @@ import config from '../../config.json';
 
 import { baseAdmin } from '../../utils';
 
+import { useTranslation } from 'react-i18next';
+
 function CreateProject({token, setError500, setFlashMessage, setToken, setUserRoles, userRoles}){
 
     const [name, setName] = useState('');
@@ -16,6 +18,8 @@ function CreateProject({token, setError500, setFlashMessage, setToken, setUserRo
     const [error, setError] = useState('');
 
     const navigate = useNavigate();
+
+    const { t } = useTranslation();
 
     const submitAfterVerifications = async (selectedFile) => {
         try{
@@ -51,10 +55,10 @@ function CreateProject({token, setError500, setFlashMessage, setToken, setUserRo
                 setError500(true);
             }
 
-            setFlashMessage("The project has been created.");
+            setFlashMessage(t('projects.create.flashMessage'));
             navigate('/projects');
         } catch (error) {
-            setError("Creation of the new project failed. Please check the infos you entered and try again.")
+            setError(t('projects.create.failed'))
         }
         
     }
@@ -91,8 +95,6 @@ function CreateProject({token, setError500, setFlashMessage, setToken, setUserRo
 
             img.onload = () => {
                 try{
-                
-                    console.log(`Width: ${img.width}, Height: ${img.height}`);
                     if(img.width / img.height !== 16/9){
                         throw new Error("bad aspect ratio");
                     }
@@ -104,9 +106,9 @@ function CreateProject({token, setError500, setFlashMessage, setToken, setUserRo
                 
                 } catch (error) {
                     if (error.message === "bad aspect ratio"){
-                        setError('Please enter an image in the ratio 16/9.');
+                        setError(t('projects.create.badAspectRatio'));
                     } else if (error.message === "too small image"){
-                        setError('The image has to be at least 768 px large.');
+                        setError(t('projects.create.toSmall'));
                     } else {
                         setError500(true);
                     }
@@ -120,13 +122,13 @@ function CreateProject({token, setError500, setFlashMessage, setToken, setUserRo
 
         } catch(error) {
         if(error.message === "no_main_input"){
-            setError('Please enter a name, frenh name, description, and french description.');
+            setError(t('projects.create.noMainInput'));
         } else if (error.message === "no_file"){
-            setError('Please enter an image.');
-        } else if (error.message === "no_file"){
-            setError('Only these formats are allowed (png, jpeg, jpg, webp).');
+            setError(t('projects.create.noFile'));
+        } else if (error.message === "invalid_file_format"){
+            setError(t('projects.create.invalidFileFormat'));
         } else {
-            setError('Creation of the new project failed. Please check the infos you entered and try again.');
+            setError(t('projects.create.failed'));
         }
         }
     
@@ -143,11 +145,11 @@ function CreateProject({token, setError500, setFlashMessage, setToken, setUserRo
                                 <div className="form-group row">
                                     <div className="col-sm-3 mb-3 mb-sm-0">
                                         <input type="text" className="form-control"
-                                            placeholder="Name" id="name" onChange={(e) => setName(e.target.value)} />
+                                            placeholder={t('projects.create.form.name')} id="name" onChange={(e) => setName(e.target.value)} />
                                     </div>
                                     <div className="col-sm-3">
                                         <input type="text" className="form-control"
-                                            placeholder="Name in french" id="french_name" onChange={(e) => setFrench_name(e.target.value)} />
+                                            placeholder={t('projects.create.form.frenchName')} id="french_name" onChange={(e) => setFrench_name(e.target.value)} />
                                     </div>
                                 </div>
                                 <div className="form-group row">
@@ -157,16 +159,16 @@ function CreateProject({token, setError500, setFlashMessage, setToken, setUserRo
                                     </div>
                                     <div className="col-sm-3">
                                         <input type="text" className="form-control"
-                                            placeholder="Description in french" id="french_description" onChange={(e) => setFrench_description(e.target.value)} />
+                                            placeholder={t('projects.create.form.frenchDescription')} id="french_description" onChange={(e) => setFrench_description(e.target.value)} />
                                     </div>
                                 </div>
                                 <div className="form-group">
                                     <input type="text" className="form-control col-lg-6"
-                                        placeholder="Link of the github repository (facultative)" id="github_link" onChange={(e) => setGithub_link(e.target.value)} />
+                                        placeholder={t('projects.create.form.githubLink')} id="github_link" onChange={(e) => setGithub_link(e.target.value)} />
                                 </div>
                                 <div className="form-group">
                                     <input type="text" className="form-control col-lg-6"
-                                        placeholder="Link of the project (facultative)" id="project_link" onChange={(e) => setProject_link(e.target.value)} />
+                                        placeholder={t('projects.create.form.projectLink')} id="project_link" onChange={(e) => setProject_link(e.target.value)} />
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="image">
@@ -176,7 +178,7 @@ function CreateProject({token, setError500, setFlashMessage, setToken, setUserRo
                                         placeholder="Image" id="image" />
                                 </div>
                                 <a href='#' onClick={handleSubmit} className="btn btn-primary btn-user btn-block col-lg-6">
-                                    Create Project
+                                    {t('projects.create.form.createButton')}
                                 </a>
                             </form>
                             {error && <div className="alert alert-danger mt-3">{error}</div>}

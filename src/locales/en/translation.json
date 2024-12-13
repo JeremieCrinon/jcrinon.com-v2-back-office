@@ -81,6 +81,60 @@
       "contactMeTitle": "Contact me",
       "contactMeText": "If you find a bug, have a problem, or any question, you can contact me. You certainly already have a contact method, but if you don't, here is my contact informations :",
       "contactMePhoneNumber": "phone number"
+    },
+
+    "projects": {
+      "readDelete": {
+        "deleteFlashMessage": "The project has been deleted !",
+        "title": "Projects",
+        "subTitle": "Here, you can view , create, edit and delete the projects displayed on the website.",
+        "linkCreate": "Create a project",
+        "tab": {
+          "title": "Projects",
+          "name": "Name",
+          "frenchName": "French name",
+          "frenchDescription": "French description",
+          "githubLink": "Github link",
+          "projectLink": "Project link",
+          "edit": "Edit",
+          "delete": "Delete"
+        }
+        
+      },
+      "create": {
+        "flashMessage": "The project has been created !",
+        "failed": "Creation of the new project failed. Please check the infos you entered and try again.",
+        "badAspectRatio": "Please enter an image in the ratio 16/9.",
+        "toSmall": "The image has to be at least 768px large.",
+        "noMainInput": "Please enter a name, french name, description, and french description.",
+        "noFile": "Please enter an image.",
+        "invalidFileFormat": "The image has to be in one of these formats : (png, jpg, jpeg, webp).",
+        "form": {
+          "name": "Name",
+          "frenchName": "French name",
+          "frenchDescription": "French description",
+          "githubLink": "Link of the Github repository (facultative)",
+          "projectLink": "Link of the project (facultative)",
+          "createButton": "Create project"
+        }
+      },
+      "edit": {
+        "flashMessage": "The project has been edited !",
+        "failed": "Edition of the project failed. Please check the infos you entered and try again.",
+        "badAspectRatio": "Please enter an image in the ratio 16/9.",
+        "toSmall": "The image has to be at least 768px large.",
+        "noMainInput": "Please enter a name, french name, description, and french description.",
+        "invalidFileFormat": "The image has to be in one of these formats : (png, jpg, jpeg, webp).",
+        "form": {
+          "name": "Name",
+          "frenchName": "French name",
+          "frenchDescription": "French description",
+          "githubLink": "Link of the Github repository (facultative)",
+          "projectLink": "Link of the project (facultative)",
+          "newImage": "Entrer a new image if you wanna change it.",
+          "createButton": "Edit project"
+        }
+      }
     }
   }
   

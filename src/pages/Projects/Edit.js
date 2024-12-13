@@ -5,6 +5,8 @@ import { requestWithoutBodyWithoutJWT, baseAdmin } from '../../utils';
 
 import config from '../../config.json';
 
+import { useTranslation } from 'react-i18next';
+
 function EditProject({token, setError500, setFlashMessage, setToken, setUserRoles, userRoles}){
 
     const [name, setName] = useState('');
@@ -17,6 +19,8 @@ function EditProject({token, setError500, setFlashMessage, setToken, setUserRole
 
     const navigate = useNavigate();
     const { id } = useParams();
+
+    const { t } = useTranslation();
 
     const getProject = async () => {
         const response = await requestWithoutBodyWithoutJWT(config.apiUrl + '/api/projects/' + id);
@@ -60,10 +64,10 @@ function EditProject({token, setError500, setFlashMessage, setToken, setUserRole
                 setError500(true);
             }
     
-            setFlashMessage("The project has been edited.");
+            setFlashMessage(t('projects.edit.flashMessage'));
             navigate('/projects');
         } catch (error) {
-            setError('Edit of the project failed. Please check the infos you entered and try again.');
+            setError(t('projects.edit.failed'));
         }
         
     }
@@ -125,9 +129,9 @@ function EditProject({token, setError500, setFlashMessage, setToken, setUserRole
                         
                         } catch (error) {
                             if (error.message === "bad aspect ratio"){
-                                setError('Please enter an image in the ratio 16/9.');
+                                setError(t('projects.edit.badAspectRatio'));
                             } else if (error.message === "too small image"){
-                                setError('The image has to be at least 768 px large.');
+                                setError(t('projects.edit.toSmall'));
                             } else {
                                 setError500(true);
                             }
@@ -144,13 +148,11 @@ function EditProject({token, setError500, setFlashMessage, setToken, setUserRole
     
           } catch(error) {
             if(error.message === "no_main_input"){
-                setError('Please enter a name, french name, description, and french description.');
-            } else if (error.message === "no_file"){
-                setError('Please enter an image.');
-            } else if (error.message === "no_file"){
-                setError('Only these formats are allowed (png, jpeg, jpg, webp).');
+                setError(t('projects.edit.noMainInput'));
+            } else if (error.message === "invalid_file_format"){
+                setError(t('projects.edit.invalidFileFormat'));
             } else {
-                setError('Edit of the project failed. Please check the infos you entered and try again.');
+                setError(t('projects.edit.failed'));
             }
           }
     
@@ -163,51 +165,51 @@ function EditProject({token, setError500, setFlashMessage, setToken, setUserRole
                     <div className="container-fluid">
                         <div className='d-flex flex-column md-12'>
                             <form className="user col-lg-12">
-                                {name && french_name && 
+                                {/* {name && french_name &&  */}
                                     <div className="form-group row">
                                         <div className="col-sm-3 mb-3 mb-sm-0">
                                             <input type="text" className="form-control"
-                                                placeholder="Name" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                                                placeholder={t('projects.edit.form.name')} id="name" value={name ? name : ''} onChange={(e) => setName(e.target.value)} />
                                         </div>
                                         <div className="col-sm-3">
                                             <input type="text" className="form-control"
-                                                placeholder="Name in french" id="french_name" value={french_name} onChange={(e) => setFrench_name(e.target.value)} />
+                                                placeholder={t('projects.edit.form.frenchName')} id="french_name" value={french_name ? french_name : ''} onChange={(e) => setFrench_name(e.target.value)} />
                                         </div>
                                     </div>
-                                }
-                                {description && french_description && 
+                                {/* } */}
+                                {/* {description && french_description &&  */}
                                     <div className="form-group row">
                                         <div className="col-sm-3 mb-3 mb-sm-0">
                                             <input type="text" className="form-control"
-                                                placeholder="Description" id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
+                                                placeholder="Description" id="description" value={description ? description : ''} onChange={(e) => setDescription(e.target.value)} />
                                         </div>
                                         <div className="col-sm-3">
                                             <input type="text" className="form-control"
-                                                placeholder="Description in french" id="french_description" value={french_description} onChange={(e) => setFrench_description(e.target.value)} />
+                                                placeholder={t('projects.edit.form.frenchDescription')} id="french_description" value={french_description ? french_description : ''} onChange={(e) => setFrench_description(e.target.value)} />
                                         </div>
                                     </div>
-                                }
+                                {/* } */}
                                 <div className="form-group">
                                     <input type="text" className="form-control col-lg-6"
-                                        placeholder="Link of the github repository (facultative)" id="github_link" value={github_link ? github_link : ''} onChange={(e) => setGithub_link(e.target.value)} />
+                                        placeholder={t('projects.edit.form.githubLink')} id="github_link" value={github_link ? github_link : ''} onChange={(e) => setGithub_link(e.target.value)} />
                                 </div>
                                 
                                 
                                 <div className="form-group">
                                     <input type="text" className="form-control col-lg-6"
-                                        placeholder="Link of the project (facultative)" id="project_link" value={project_link ? project_link : ''} onChange={(e) => setProject_link(e.target.value)} />
+                                        placeholder={t('projects.edit.form.projectLink')} id="project_link" value={project_link ? project_link : ''} onChange={(e) => setProject_link(e.target.value)} />
                                 </div>
                                 
                                 
                                 <div className="form-group">
                                     <label htmlFor="image">
-                                        Enter a new image if you wanna change it.
+                                        {t('projects.edit.form.newImage')}
                                     </label>
                                     <input type="file" className="form-control col-lg-6"
                                         placeholder="Image" id="image" />
                                 </div>
                                 <a href='#' onClick={handleSubmit} className="btn btn-primary btn-user btn-block col-lg-6">
-                                    Edit Project
+                                    {t('projects.edit.form.createButton')}
                                 </a>
                             </form>
                             {error && <div className="alert alert-danger mt-3">{error}</div>}
