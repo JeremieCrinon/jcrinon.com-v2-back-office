@@ -3,6 +3,8 @@ import React, {useState, useEffect} from 'react';
 import { requestWithoutBodyWithJWT, baseAdmin, requestWithBodyWithJWT } from '../../utils';
 import config from '../../config.json';
 
+import { useTranslation } from 'react-i18next';
+
 function CreateReadDeleteUser({token, setError500, setFlashMessage, setToken, setUserRoles, userRoles}){
 
     const [users, setUsers] = useState([]);
@@ -10,6 +12,8 @@ function CreateReadDeleteUser({token, setError500, setFlashMessage, setToken, se
     const [choosedRoles, setChoosedRoles] = useState([]);
     const [user_email, setUser_email] = useState("");
     const [error, setError] = useState(null);
+
+    const { t } = useTranslation();
     
     async function requestUsers() {
         try{
@@ -71,7 +75,7 @@ function CreateReadDeleteUser({token, setError500, setFlashMessage, setToken, se
 
             await response.json();
 
-            setFlashMessage("The user has successfully been created!");
+            setFlashMessage(t('users.create.flashMessage'));
             setChoosedRoles([]);
             setUser_email("");
             setError(null);
@@ -90,9 +94,9 @@ function CreateReadDeleteUser({token, setError500, setFlashMessage, setToken, se
 
         } catch(error){
             if(error.message === "no_email"){
-                setError("Please enter an email for the new user!")
+                setError(t('users.create.noEmail'))
             } else if (error.message === "no_roles"){
-                setError("Please choose at least one role for the new user, you can take the role ROLE_USER that will give him no permissions.")
+                setError(t('users.create.noRoles'))
             } else {
                 setError500(true);
             }
@@ -100,7 +104,7 @@ function CreateReadDeleteUser({token, setError500, setFlashMessage, setToken, se
     }
 
     async function deleteUser(user_id, user_email){
-        if(window.confirm(`Are you sure you want to delete the user with the email ${user_email}?`)){
+        if(window.confirm(`${t('users.delete.confirm')} ${user_email}?`)){
             try{
                 const response = await requestWithoutBodyWithJWT(config.apiUrl + '/api/users/' + user_id + '/delete', token);
     
@@ -109,7 +113,7 @@ function CreateReadDeleteUser({token, setError500, setFlashMessage, setToken, se
                 } else if(response === 500){
                     setError500(true);
                 } else {
-                    setFlashMessage("The user as been deleted !");
+                    setFlashMessage(t('users.delete.flashMessage'));
                     requestUsers();
                 }
             } catch{
@@ -142,13 +146,13 @@ function CreateReadDeleteUser({token, setError500, setFlashMessage, setToken, se
                 <div id="content">
                     <div className="container-fluid">
                         {/* Page Heading */}
-                            <h1 className="h3 mb-2 text-gray-800">Users</h1>
-                            <p className="">Here, you can view, create and delete the users on the website.</p>
+                            <h1 className="h3 mb-2 text-gray-800">{t('users.title')}</h1>
+                            <p className="">{t('users.subTitle')}</p>
 
                             {/* DataTales Example */}
                             <div className="card shadow mb-4">
                                 <div className="card-header py-3">
-                                    <h6 className="m-0 font-weight-bold text-primary">Users</h6>
+                                    <h6 className="m-0 font-weight-bold text-primary">{t('users.readTable.title')}</h6>
                                 </div>
                             <div className="card-body">
                                 <div className="table-responsive">
@@ -157,14 +161,14 @@ function CreateReadDeleteUser({token, setError500, setFlashMessage, setToken, se
                                             <tr>
                                                 <th>Email</th>
                                                 <th>Roles</th>
-                                                <th>Delete</th>
+                                                <th>{t('users.readTable.deleteButton')}</th>
                                             </tr>
                                         </thead>
                                         <tfoot>
                                             <tr>
                                                 <th>Email</th>
                                                 <th>Roles</th>
-                                                <th>Delete</th>
+                                                <th>{t('users.readTable.deleteButton')}</th>
                                             </tr>
                                         </tfoot>
                                         <tbody>
@@ -184,7 +188,7 @@ function CreateReadDeleteUser({token, setError500, setFlashMessage, setToken, se
                                                             <span className="icon text-white-50">
                                                                 <i className="fas fa-trash"></i>
                                                             </span>
-                                                            <span className="text">Delete</span>
+                                                            <span className="text">{t('users.readTable.deleteButton')}</span>
                                                         </a>
                                                     </td>
                                                 </tr>
@@ -195,14 +199,14 @@ function CreateReadDeleteUser({token, setError500, setFlashMessage, setToken, se
                             </div>
                             <div className="card mb-2">
                                 <div className="card-header py-3">
-                                    <h6 className="m-0 font-weight-bold text-primary">Create a user</h6>
+                                    <h6 className="m-0 font-weight-bold text-primary">{t('users.create.title')}</h6>
                                 </div>
                             </div>
                             <div className="card-body">
                                 <form className="user col-lg-8 mb-4" id='create_user_form'>
                                     <div className="form-group">
                                         <input type="text" className="form-control col-lg-6"
-                                            placeholder="User email" id="user_email" onChange={(e) => setUser_email(e.target.value)} />
+                                            placeholder={t('users.create.placeholderEmail')} id="user_email" onChange={(e) => setUser_email(e.target.value)} />
                                     </div>
                                     {possibleRoles.map((role, index) => (
                                         <div key={index} className="form-group">
@@ -212,15 +216,8 @@ function CreateReadDeleteUser({token, setError500, setFlashMessage, setToken, se
                                             </div>
                                         </div>
                                     ))}
-                                    {/* <div className="form-group">
-                                        <div className="custom-control custom-checkbox small">
-                                            <input type="checkbox" className="custom-control-input" id="customCheck" />
-                                            <label className="custom-control-label" htmlFor="customCheck">Remember
-                                                Me</label>
-                                        </div>
-                                    </div> */}
                                     <a href='#' onClick={handleCreateSubmit} className="btn btn-primary btn-user btn-block col-lg-6">
-                                        Create User
+                                        {t('users.create.button')}
                                     </a>
                                 </form>
                                 {error && <div className="alert alert-danger mt-3">{error}</div>}

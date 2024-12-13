@@ -135,6 +135,27 @@
           "createButton": "Edit project"
         }
       }
+    },
+
+    "users": {
+      "title": "Users",
+      "subTitle": "Here, you can view, create and delete the users on the website.",
+      "readTable": {
+        "title": "Users",
+        "deleteButton": "Delete"
+      },
+      "create": {
+        "flashMessage": "The user has successfully been created!",
+        "noEmail": "Please enter an email for the new user !",
+        "noRoles": "Please choose at least one role for the new user. You can choose ROLE_USER that will give him no permissions if you want.",
+        "title": "Create a user",
+        "placeholderEmail": "User email",
+        "button": "Create User"
+      },
+      "delete": {
+        "confirm": "Are you sure you want to delete the user with the email ",
+        "flashMessage": "The user has been deleted !"
+      }
     }
   }
   

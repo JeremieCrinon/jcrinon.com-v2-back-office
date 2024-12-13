@@ -134,6 +134,27 @@
           "createButton": "Modifier le projet"
         }
       }
+    },
+
+    "users": {
+      "title": "Utilisateurs",
+      "subTitle": "Ici, vous pouvez voir, créer et supprimer les utilisateurs.",
+      "readTable": {
+        "title": "Utilisateurs",
+        "deleteButton": "Supprimer"
+      },
+      "create": {
+        "flashMessage": "L'utilisateur a bien été créé !",
+        "noEmail": "Merci d'entrer un e-mail pour le nouvel utilisateur !",
+        "noRoles": "Merci de choisir au moins un role pour le nouvel utilisateur. Vous pouvez choisir le role ROLE_USER qui ne donne aucune permission si vous le souhaitez.",
+        "title": "Créer un utilisateur",
+        "placeholderEmail": "Email de l'utilisateur",
+        "button": "Créer l'utilisateur"
+      },
+      "delete": {
+        "confirm": "Vous êtes sur(e) de vouloir supprimer l'utilisateur avec l'e-mail ",
+        "flashMessage": "L'utilisateur a bien été supprimé !"
+      }
     }
   }
   
